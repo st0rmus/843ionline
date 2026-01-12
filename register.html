@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qeydiyyat səhifəsi</title>
+    <link rel="stylesheet" href="register.css">
+    <script type="module" src="register.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="register-container">
+            <h1>Qeydiyyat səhifəsi</h1>
+            <form id="register-form">
+                <input type="text" id="new-usermail" placeholder="E-poçt ünvanı" required>
+                <input type="password" id="new-password" placeholder="Şifrə(Minimum 6 simvol)" required>
+                <input type="password" id="repeat-password" placeholder="Şifrə təkrarı(Minimum 6 simvol)" required>
+                <button type="submit" id="submit">Qeydiyyatdan keç</button>
+               
+                <p><a href="index.html">Giriş səhifəsinə geri dön</a></p>
+
+            </form>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+    <script src="register.js"></script>
+</body>
+
+</html>
+
+
+
+<style>
+    a {
+        text-decoration: none;
+        color: #0000FF;
+        
+    }
+
+    a:hover {
+        color: #FF0000;
+        
+    }
+
+    a:visited {
+        color: #800080;
+
+    }
+    a:active {
+            color: #FF0000; 
+    }
+</style>

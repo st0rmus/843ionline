@@ -1,0 +1,284 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  padding: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+img {
+  width: 100%; /* Görsel genişliği, ebeveyn elemanın genişliğini doldurur */
+  height: auto; /* Görüntü oranlarını korur */
+  max-width: 35%; /* Görsel genişliğini aşırı büyütmeyi önler */
+}
+
+ .question-card {
+      margin-top: 100px;
+      margin-left: -5px;
+      margin-right: -5px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+.question {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+ul {
+  padding-left: 0;
+}
+
+.variant {
+  margin-bottom: 5px;
+  cursor: pointer;
+  padding: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.navigation {
+  margin-top: 20px;
+}
+
+.btn {
+  margin-left: -5px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.navbar {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-shadow: 0 2px 4px rgb(0, 123, 255);
+  z-index: 1000;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #222;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: rgb(255, 255, 255);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-content a i {
+  margin-right: 10px;
+}
+
+.dropdown-content a:hover {
+  background-color: #007bff;
+}
+
+.dropbtn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  margin-left: 0px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center; 
+  transition: background-color 0.3s ease;
+}
+
+.dropbtn i {
+  margin-right: 5px; 
+}
+
+
+.dropbtn:hover {
+  background-color: #0056b3;
+}
+
+.show {
+  display: block;
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.dark-mode-toggle {
+  background-color: #222;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.dark-mode {
+  background-color: #272727;
+  color: white;
+}
+
+.dark-mode .navbar,
+.dark-mode .dropdown-content,
+.dark-mode .question-card {
+  background-color: #666;
+  color: rgb(255, 255, 255);
+}
+
+.dark-mode .btn {
+  background-color: #1b1b1b;
+  color: #f0f0f0;
+}
+
+.form-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+form {
+  margin-left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input[type="button"] {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="button"]:hover {
+  background-color: #007bff;
+}
+
+input[type="button"]:active {
+  background-color: #007bff;
+}
+
+input[type="button"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.results {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 50px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+img {
+max-width: 150%; /* Mobil cihazlarda resimler tam genişlikte olur */
+height: auto;
+}
+  
+  .form-container {
+    margin-left: 20px;
+    display: block;
+    width: 100%;
+  }
+
+  form {
+    margin-left: 0;
+    width: 100%;
+    display: block;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .dropdown-content {
+    right: 0; /* Sağ kenara yapışık kalmaması için sağa olan uzaklığı sıfırla */
+    left: auto; /* Sol taraftan sıfıra yapışık kalmaması için sola olan uzaklığı sıfırla */
+    width: 200px; 
+  }
+
+  .dropdown-content a {
+     padding: 12px 16px;
+  }
+
+  .dropbtn {
+    margin-left: 0px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .current-question {
+    margin-top: 60px;
+    margin-left: -70px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .results {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 100px;
+    text-align: center;
+    font-size: 18px;
+    z-index: 999;
+  }
+}

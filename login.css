@@ -1,0 +1,61 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background: #fff;
+    opacity: 0.9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input, button {
+    margin: 10px 0;
+    padding: 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background: #000000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #0056b3;
+}
+ 
+
+.link:visited {
+    color: #0000FF; /* Ziyaret edilmiş link rengi */
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('arkaplan.jpg');
+    background-size: cover; /* Arka planı tam ekran yapmak için */
+    background-position: center; /* Arka planı ortalamak için */
+    background-repeat: no-repeat; /* Tekrar etmemesi için */
+}
+
