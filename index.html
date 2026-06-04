@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <!-- Font Awesome kütüphanesini ekliyoruz -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş et</title>
+    <link rel="stylesheet" href="login.css">
+    <script type="module" src="login.js" defer></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+
+    </style>
+</head>
+
+
+<style>
+    .no-underline {
+        text-decoration: none;
+    }
+</style>
+
+
+
+
+
+
+<body>
+    <div class="container">
+        <div class="login-container">
+            <h1>843i</h1>
+
+            <form id="login-form">
+                <input type="text" id="username" placeholder="E-poçt ünvanı" required>
+                
+                <!-- Şifre inputu ve göz ikonu -->
+                <div style="position: relative;">
+                    <input type="password" id="password" placeholder="Şifrə" required>
+                    <i id="togglePassword" class="fas fa-eye" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+                </div>
+
+                <button type="submit">Giriş et</button>
+            </form>
+            <div class="register-link">
+                <p><a class="no-underline" href="register.html" class="link">Qeydiyyatdan keç</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            // Şifre alanının tipini değiştir (text/password)
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Göz simgesini değiştir
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+
+</html>

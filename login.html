@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <title>Suallar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .switch-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px; /* Add margin below the switch container */
+  white-space: nowrap;
+  margin-right: 10px;
+  margin-top:10px;
+  padding: 1px;
+}
+
+.switch {
+  margin-left: 7px;
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #007bff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(14px);
+}
+
+
+
+    .question-card {
+      margin-top: 70px;
+      margin-left: -5px;
+      margin-right: -5px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      padding-left: 0;
+    }
+
+    .variant {
+      margin-bottom: 5px;
+      cursor: pointer;
+      padding: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .navigation {
+      margin-top: 20px;
+    }
+
+    .btn {
+      margin-left: -5px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .navbar {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      box-shadow: 0 2px 4px rgb(0, 123, 255);
+      z-index: 1000;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #222;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown-content a i {
+      margin-right: 10px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #007bff;
+    }
+
+    .dropbtn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      margin-left: 0px;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      justify-content: flex-start;
+      /* Metni ve logoyu solda hizala */
+      align-items: center;
+      /* Dikeyde ortala */
+      transition: background-color 0.3s ease;
+    }
+
+    .dropbtn i {
+      margin-right: 5px;
+      /* Logo ile metin arasındaki boşluğu ayarla */
+    }
+
+    .dropbtn:hover {
+      background-color: #0056b3;
+    }
+
+    .show {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .dark-mode-toggle {
+      background-color: #222;
+      color: white;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .dark-mode {
+      background-color: #272727;
+      color: white;
+    }
+
+    .dark-mode .navbar,
+    .dark-mode .dropdown-content,
+    .dark-mode .question-card {
+      background-color: #666;
+      color: white;
+    }
+
+    .dark-mode .btn {
+      background-color: #1b1b1b;
+      color: #f0f0f0;
+    }
+
+    .form-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    form {
+      margin-left: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="button"] {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="button"]:hover {
+      background-color: #007bff;
+    }
+
+    input[type="button"]:active {
+      background-color: #007bff;
+    }
+
+    input[type="button"]:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .question-card {
+        margin-top: 100px;
+        margin-left: -5px;
+        margin-right: -5px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .switch-container {
+    width: 100%;
+    margin-left:-5px;
+  }
+.switch{
+  margin-right:-8px;
+}
+      .form-container {
+        margin-left: 20px;
+        display: block;
+        width: 100%;
+      }
+
+      form {
+        margin-left: 0;
+        width: 100%;
+        display: block;
+      }
+
+      .btn {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .dropdown-content {
+        right: 100px;
+        left: -45px;
+      }
+
+      .dropdown-content a {
+        padding: 8px;
+      }
+
+      .dropbtn {
+        margin-left: 0px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .current-question {
+        margin-top: 60px;
+        margin-left: -20px;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="form-container">
+      <form id="numberForm">
+        <input type="number" id="fromNumber" name="fromNumber" min="1" placeholder="Başlama">
+        <input type="number" id="toNumber" name="toNumber" min="1" placeholder="Bitmə">
+        <input type="button" value="Axtar" onclick="getNumber()">
+        
+
+      </form>
+    </div>
+    <div class="current-question" id="currentQuestionDisplay" style="margin-left: -80px">Sual: 1</div>
+    <div class="dropdown">
+      <button class="dropbtn" onclick="toggleDropdown()">
+        <i class="fa fa-user"></i> İstifadəçi</button>
+      <div class="dropdown-content" id="dropdownContent">
+        <a href="imtahan.html"><i class="fa fa-pen"></i> İmtahan</a>
+        <a href="analog.html"><i class="fa fa-check-square"></i> Analoq açıq suallar</a>
+        <a href="qapalı.html"><i class="fa fa-lock"></i> Analoq qapalı suallar</a>
+        <a href="#" class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fa fa-moon"></i> Qaranlıq rejim</a>
+        <a href="#" onclick="showInfo()"><i class="fa fa-comment"></i> Təklif və iradlar</a>
+        <a href="#" onclick="logout()"><i class="fa fa-sign-out-alt"></i> Çıxış</a>
+        <div class="switch-container">
+          <label class="switch">
+            <input type="checkbox" id="autoNextToggle">
+            <span class="slider"></span>
+          </label>
+          <span>Avtomatik keçid</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="questionContainer"></div>
+  <div class="navigation">
+    <button class="btn" id="prevBtn">Əvvəlki</button>
+    <button class="btn" id="nextBtn">Sonrakı</button>
+  </div>
+
+  <script>
+    function getNumber() {
+      var fromNumber = document.getElementById("fromNumber").value;
+      var toNumber = document.getElementById("toNumber").value;
+
+      shuffledQuestionIndexes = [];
+      currentQuestionIndex = 0;
+      shuffledQuestionIndexes = shuffleArray(createArrayUpTo(fromNumber - 1, toNumber - 1));
+      console.log("shuffledQuestionIndexes:" + shuffledQuestionIndexes);
+      showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+    }
+
+    function toggleDropdown() {
+      document.getElementById("dropdownContent").classList.toggle("show");
+    }
+
+    function logout() {
+      window.location.href = "index.html";
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      if (document.body.classList.contains("dark-mode")) {
+        document.body.style.color = "white";
+      } else {
+        document.body.style.color = "black";
+      }
+    }
+
+    function showInfo() {
+      alert("Bura arzular və istəklər verilişi deyil.");
+    }
+
+    window.onclick = function (event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, set, onDisconnect, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCISiSeOegesyAaqVsHuRNH7cFtGUUc920",
+  authDomain: "iproject-edf06.firebaseapp.com",
+  projectId: "iproject-edf06",
+  storageBucket: "iproject-edf06.appspot.com",
+  messagingSenderId: "1094280671740",
+  appId: "1:1094280671740:web:4acb1a445f3ffe37bf4279"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const database = getDatabase(app);
+
+onAuthStateChanged(auth, user => {
+      if (!user) {
+        console.log("!user" + user);
+        window.location.replace("index.html");
+      } else {
+        console.log("user" + user);
+        const uid = user.uid;
+        const userRef = ref(database, 'users/' + uid + '/rank');
+        get(userRef).then((snapshot) => {
+          const userRank = snapshot.val();
+          console.log('Kullanıcı uid:', uid);
+          console.log('Kullanıcı rankı:', userRank);
+          if (userRank === 'guest') {
+            window.location.href = 'guest.html';
+          }
+        });
+      }
+    });
+onAuthStateChanged(auth, user => {
+  if (user) {
+    const uid = user.uid;
+    const userRef = ref(database, 'users/' + uid);
+    const lastLogin = new Date().toLocaleString();
+   
+    get(userRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        
+ 
+        set(userRef, {
+          ...userData, 
+          status: 'online',
+          lastLogin: lastLogin
+        });
+      }
+    });
+
+   
+    const userStatusRef = ref(database, 'users/' + uid + '/status');
+    onDisconnect(userStatusRef).set('offline'); 
+  } else {
+    console.log("İstifadəçi giriş etməyib.");
+  }
+});
+
+
+
+
+    
+  </script>
+
+  <script>
+        const json = {
+      "questions": [
+       "What is the project?",
+"What is an activity with start and end time points that represents the creation of a new service or product?",
+"Which of these is not a day job?",
+"Which of these is a day job?",
+"x characteristic of the project ?",
+"the x characteristic of the project ?",
+"x characteristic of the project ?",
+"x characteristic of the project ?",
+"What is the project / day job?",
+"What is the project / day job?",
+"What is the project / day job?",
+"What is the project / day job?",
+"Why is the project created?",
+"Why is the project created?",
+"Why is the project created?",
+"Why is the project created?",
+"What is the main purpose of project management?",
+"What are the 3 main limitations of projects?",
+"Which of these are project management limitations?",
+"Which of these are project management limitations?",
+"Which of these are project management limitations?",
+"Which of the following is not one of the triple constraints in project management?",
+"Which of the following is a management method?",
+"What limitation do they try not to change in Traditional (Traditional) Projects?",
+"What constraint do they try not to change in Agile projects?",
+"How does agile management differ from traditional management?",
+"What does the term scope refer to in project management?",
+"What is project management?",
+"What do companies gain as a result of effective project management?",
+"What do companies gain as a result of effective project management?",
+"What do companies gain as a result of effective project management?",
+"What do companies gain as a result of effective project management?",
+"What do companies gain as a result of effective project management?",
+"What do companies gain as a result of effective project management?",
+"What do companies gain as a result of effective project management?",
+"What are the stages of project management?",
+"What is the sequence of project management phases?",
+"At what stage is the project charter prepared?",
+"Agile – What is an agile management method?",
+"What is the name of the first product on the market in the agile management method?",
+"What are the minimum requirements that a project requester should have for the project in question?",
+"For what reason can the project be started?",
+"For what reason can the project be started?",
+"When is the project manager appointed?",
+"What information should not be included in the project charter?",
+"What are the skills needed?",
+"What is product scope?",
+"What is the project scope?",
+"It does not apply to interested parties.",
+"the following could be an external stakeholder?",
+"What is a power-interest matrix?",
+"What is a hybrid project?",
+"What are the considered and documented needs and expectations of the sponsor, client and all other interested parties?",
+"Which of the following is not determined as a result of gathering requirements?",
+"Which is not one of the techniques for gathering requirements?",
+"One of the following is a technique for gathering requirements.",
+"What is the characteristic of SMART technique?",
+"What does the SMART technique mean in the context of project goals?",
+"What is a popular technique for writing requirements?",
+"What is the work breakdown structure?",
+"Which of the following is a work breakdown diagram?",
+"What technique is used to determine the sequence of execution of jobs?",
+"Not related to sequence diagram.",
+"In which evaluation method, expert opinions are applied.",
+"In which evaluation method is it evaluated based on the information received from similar projects or works done in the past ?",
+"Which estimation method selects a value between the best estimate and the worst estimate?",
+"In which estimation method is the calculation based on price, units of measurement, and working hours?",
+"In which evaluation method, starting with the smallest task and summing it up, the total amount of work is deduced?",
+"Who is the Gantt chart intended for use?",
+"Which project management tool is used to show dependencies between project activities and calculate the critical path of a project?",
+"What is the role of the project sponsor?",
+"Which step in the project management process involves comparing actual project performance with planned performance and making adjustments as needed?",
+"What is the main purpose of the project's change control process?",
+"What does cost management involve?",
+"What does cost management involve?",
+"What does cost management involve?",
+"What does cost management involve?",
+"Which of the following does not apply to project cost management?",
+"How much difference can there be in the estimated costs at the start-up stage?",
+"How much difference can there be in the estimated costs at the planning stage?",
+"What can't we find through earned value analysis?",
+"What can we track through earned value analysis?",
+"What should the project manager be sure of during quality management?",
+"What should the project manager be sure of during quality management?",
+"What should the project manager be sure of during quality management?",
+"What should the project manager be sure of during quality management?",
+"What should the project manager be sure of during quality management?",
+"Which of the following is not a common type of project risk?",
+"What is the most popular method used to investigate a problem in IT Project Management?",
+"Who are the UAT tests for?",
+"Which type of project management methodology focuses on collaboration and customer feedback?",
+"What document is used to officially authorize the project?",
+"What is the main purpose of the initial stage in project management?",
+"What is the main purpose of the planning phase in project management?",
+"What is the main purpose of the implementation phase in project management?",
+"What is the main purpose of the inspection phase in project management?",
+"What is the main purpose of the closing phase in project management?",
+"Which of the following is not a value of Agile?",
+"Which of the following refers to Individuals and communication?",
+"Which of the following refers to a Running program?",
+"Which of the following refers to customer collaboration?",
+"Which of the following refers to responding to a Change?",
+"Which of these is one of the 12 principles of the Agile Manifesto?",
+"Which of the following is a technique used to prioritize customer requirements?",
+"Where did the Lean Mindset originate ?",
+"In what year was the traditional management method created?",
+"Where did the traditional (Traditional) management method first appear?",
+"When did Agile methodology originate?",
+"What is Agile based on?",
+"Where did Agile methodology first originate?",
+"Who are the stakeholders in project management?",
+"\\\"Don't be afraid of changing requirements even at the last moment of work. Agile processes use change to satisfy the customer.\" What value does the principle refer to?",
+"\\\" Deliver a working program frequently, from a few weeks to a few months , preferably shorter.\\\" What value does the principle refer to?",
+"\\\"Business people and programmers must work together on a daily basis throughout the project.\\\" What value does the principle refer to?",
+"\\\"Delighting the customer through early and continuous delivery of valuable software is our top priority.\\\" What value does the principle refer to?",
+"\" Build projects around passionate individuals. Provide necessary conditions and support for them. Trust them to get the job done. \" principle refers to what value?",
+"\" The most effective, efficient way to convey information to and from the programming team is through face-to-face communication. \" principle refers to what value?",
+"\\\" The main indicator of development is a working program. \" principle refers to what value?",
+"\\\" Agile processes support continuous development. Sponsors, developers and users must be able to maintain a steady pace.\\\" What value does the principle refer to?",
+"\\\"Constant attention to technical excellence and sound design enhances agility.\\\" What value does the principle refer to?",
+"\\\"Simplicity—the art of reducing excess—is essential.\\\" What value does the principle refer to?",
+"\\\"Self-managing teams can come up with the best architecture, requirements, and design.\\\" What value does the principle refer to?",
+"\\\"In equal time intervals, the team becomes more productive by choosing its own efficiency, and adjusts its work accordingly.\\\" What value does the principle refer to?",
+"What is the main purpose of the project management plan?",
+"What is the main purpose of the project communication plan?",
+"What is the main purpose of the project risk register?",
+"the most widely used framework in management ?",
+"Which of the following is an Agile project management framework that works with sprints?",
+"Which of the following best describes the role of the project manager?",
+"What is the main purpose of a project scope statement?",
+"What is the main purpose of the first meeting of the project?",
+"Which of the following best describes the project change management process?",
+"What is the main purpose of the project resource allocation plan?",
+"What is the main purpose of the project change request form?",
+"Which of the following is not a component of project scope?",
+"Which project management tool is used to identify the root causes of an issue or problem?",
+"Which of the following is not a typical role in an Agile project team?",
+"Which of the following is a common technique used for stakeholder analysis in project management?",
+"Which of the following is not a typical constraint in project management?",
+"What characterizes Lean thinking?",
+"What year was Scrum created?",
+"Scrum is based on which of the following?",
+"Scrum is based on which of the following?",
+"Scrum ?",
+"Which of the following is one of the foundations of scrum?",
+"Which of the following is one of the foundations of scrum?",
+"Which of the following is one of the foundations of scrum?",
+"What is characterized by transparency in Scrum theory?",
+"What is characterized by adaptation in Scrum theory?",
+"What characterizes inspection in Scrum theory?",
+"The importance of Scrum depends on which of the following ? _ _ _ _ _ _",
+"The importance of Scrum depends on which of the following ? _ _ _ _ _ _",
+"The importance of Scrum depends on which of the following ? _ _ _ _ _ _",
+"The importance of Scrum depends on which of the following ? _ _ _ _ _ _",
+"The importance of Scrum depends on which of the following ? _ _ _ _ _ _",
+"Which of the following characterizes the basic unit of scrum?",
+"What is the main responsibility of the Scrum team?",
+"Which of the following is the composition of a scrum team?",
+"Which of the following is the composition of a scrum team?",
+"Which of the following is the composition of a scrum team?",
+"What does a scrum team work on?",
+"a scrum team usually consist of?",
+"Developers are always responsible for:",
+"Developers are always responsible for:",
+"Developers are always responsible for:",
+"Developers are always responsible for:",
+"is responsible for the effective management of the Product Backlog :",
+"is responsible for the effective management of the Product Backlog :",
+"is responsible for the effective management of the Product Backlog :",
+"is responsible for the effective management of the Product Backlog :",
+"Who is the Product Owner?",
+"With whom do stakeholders agree on requests to make changes to the Product backlog?",
+"A scrum master is responsible for which of the following?",
+"A scrum master is responsible for which of the following?",
+"Who is the leader of the Scrum Team and serving the larger organization ?",
+"Who is a scrum master?",
+"Who is a scrum master?",
+"Who is a scrum master?",
+"In what ways does the Scrum Master serve the Scrum Team ?",
+"In what ways does the Scrum Master serve the Scrum Team ?",
+"In what ways does the Scrum Master serve the Scrum Team ?",
+"In what ways does the Scrum Master serve the Scrum Team ?",
+"How does the Scrum Master serve the Product Owner ? _",
+"How does the Scrum Master serve the Product Owner ? _",
+"How does the Scrum Master serve the Product Owner ? _",
+"How does the Scrum Master serve the Product Owner ? _",
+"In what ways does the Scrum Master serve the organization from below ?",
+"In what ways does the Scrum Master serve the organization from below ?",
+"In what ways does the Scrum Master serve the organization from below ?",
+"In what ways does the Scrum Master serve the organization from below ?",
+"Which of the following acts as a container for scrum events?",
+"Which of the following is a key driver of how scrum ideas turn into value?",
+"Who has the authority to cancel a sprint?",
+"Which of the following is an indication that Sprint is valuable?",
+"Which of the following stages initiates a sprint?",
+"What is the Sprint Goal , the Product Backlog items selected for the Sprint , and the plan for moving them back together ? _",
+"A Which of the following does not apply to a sprint period?",
+"What is daily scrum?",
+"Which of the following analyzes the results of a Sprint?",
+"Which of the following is an executive team?",
+"A completes which of the following sprints.",
+"What are Scrum artifacts for the Product backlog?",
+"What is a product goal for Scrum?",
+"What causes the sprint backlog?",
+"What are Scrum artifacts for the Sprint backlog?",
+"What are Scrum artifacts for Increment?",
+"What is the role of the Scrum Team ? _ _ _ _ _ _ _",
+"Who manages the product backlog?",
+"Who creates the product backlog?",
+"Which of the following applies to a Scrum team?",
+"Which of the following is an advantage of a Scrum team?",
+"With whose participation is the sprint backlog created?",
+"What is the maximum duration of a Sprint Review meeting?",
+"What is the maximum duration of a Sprint Retrospective meeting?",
+"Which Increment is an appropriate action plan to create ? _ _ _",
+"Which plan is intended for developers?",
+"Which of the following are defined as unexpected events or conditions in project management?",
+"Which of the following are negative project risks?",
+"Which of the following are positive project risks?",
+"Which of the following is not a negative project risk?",
+"Which of the following is not a positive project risk?",
+"What is risk in project management?",
+"What is uncertainty in project management?",
+"Which of the following is not a risk management plan?",
+"Which of the following methods allows you to manage the effects of risks according to the project objectives?",
+"It does not represent internal and external stakeholders in the project",
+"What is the tool used to create information and meeting links between project stakeholders?",
+"What task should the project manager perform during the implementation phase of the project?",
+"What task should the project manager perform during the implementation phase of the project?",
+"What task should the project manager perform during the implementation phase of the project?",
+"What task should the project manager perform during the implementation phase of the project?",
+"What task should the project manager perform during the implementation phase of the project?",
+"What task should the project manager perform during the implementation phase of the project?",
+"At what stage of the project is the evaluation of results carried out?",
+"At what stage of the project is the acceptance and organization of the project?",
+"At what stage of the project is the assignment of resources carried out?",
+"At what stage of the project is the preparation of the implementation plan?",
+"At what stage of the project is the management of the implementation stage?",
+"At what stage of the project is problem solving done?",
+"Which of the following does not apply to change management?",
+"Who is responsible for change management?",
+"Which of the following documents allow accurate and objective analysis and registration of the project implementation process?",
+"Which of the following Status reports are used to detail the work performed and the results achieved during the project implementation process?",
+"Which of the following status reports are used to detail the time and budget of the works performed during the project execution process ?",
+"Which of the following Status reports are used to detail problems and errors encountered during project execution?",
+"Which of the following Status reports are used to detail the risks encountered during the project execution process and their analysis?",
+"Which of the following Status reports are used to detail the results of changes made during the project execution process?",
+"What tool is used to check, sort, and manage problems, errors, and reviews of the project execution process?",
+"What is the document that reflects the completion of the implementation process of a project?",
+"What is the document that ensures that all project responsibilities are lifted and the project manager and stakeholders are released from these responsibilities?",
+      ],
+      "variants": [
+        ["A project is a unique activity with start and end times, involves the creation of a new product or service, has specific resources, and has quality and risk requirements.", "A project is a unique activity with start and end times, involves the creation of a repeated product or service, has a specific resource, and has quality and risk requirements.", "A project is a non-unique activity with start and end time points, quality and risk requirements", "A project is a unique activity that involves the creation of a repeated product or service, has a specific resource, and has quality and risk requirements", "A project is a unique activity with variable resource, quality and risk requirements"],
+["Project", "Daily work", "Presentation", "Contract", "Budget"],
+["Creating a website", "Approval of documents", "Writing a presentation", "Starting the network", "Quality control"],
+["Book sale in the store", "Web site preparation", "Construction of an entertainment center", "Organization of reading company", "Organization of the conference"],
+["Start c _ _ _ _ and it 's over of history not to be", "Creating a duplicate product or service", "Non-unique activity", "Having a variable resource", "No time limit"],
+["Creation of a new product", "Having a variable resource", "No time limit", "Creating a duplicate product or service", "Non-unique activity"],
+["Having certain restrictions (limits).", "Non-unique activity", "No time limit", "Having a variable resource", "Creating a duplicate product or service"],
+["Layih 's _ day _ _ _ _ business from activities _ _ _ _ _ _ _ difference _ _ _ _ _", "No time limit", "Having a variable resource", "Creating a duplicate product or service", "Non-unique activity"],
+["temporary attempt / ongoing day job", "recurring activity / unique activity", "recycled product / new service", "profit / temporary attempt", "work done for new purposes / new service after achievement"],
+["new original work / duplicate works", "recycled product / new service", "work done for new purposes / new service after achievement", "profit / temporary attempt", "recurring activity / unique activity"],
+["unique activity / recurring activity", "recycled product / new service", "recurring activity / unique activity", "profit / temporary attempt", "repetitive activity / stopped after achieving goals"],
+["stop after achieving goals / work done for new goals after achievement", "repetitive activity / stopped after achieving goals", "stops after achieving goals / unique activity", "work done for new goals after achievement / temporary attempt", "recurring activity / unique activity"],
+["For compliance purposes, legal or social requirements", "At the request of the product owner", "To avoid making changes", "To remove restrictions", "For renewal of services"],
+["To meet the requirements or needs of interested parties", "To avoid making changes", "To update and improve the Services", "At the request of interested parties", "Creating a duplicate product or service"],
+["To create, develop or improve products, processes or services", "To create a repeatable product or service", "To remove restrictions", "At the request of interested parties", "To avoid making changes"],
+["To change or implement new business or technological strategies", "To create a repeatable product or service", "To replicate or implement new business or technological strategies", "To avoid making changes", "To eliminate external influences"],
+["Complete the project on time, within budget and with quality", "Increasing the company's income", "Application of the most advanced technology", "Creating a highly qualified team", "Building long-term relationships with customers"],
+["budget, time, scope", "budget, time, stakeholders", "b udge, risks, coverage", "budget, stakeholders, scope", "risks, timing, scope"],
+["Scope", "stakeholders", "risks", "resources", "developers"],
+["Budget", "Resources", "Requirements", "Developers", "Risks"],
+["Time", "Offers", "Location", "Stakeholders", "Monitoring"],
+["risk", "time", "budget", "Scope", "quality"],
+["Traditional", "corporative", "Parametric", "Creative", "Planning"],
+["Scope", "Budget and scope", "Time", "Budget and time", "Budget"],
+["Time and budget", "Budget and scope", "Time and scope", "Scope", "Time"],
+["Responding to change", "Management without a plan", "Lack of time dependence", "Preference for individual work", "Complex documentation"],
+["Gradual expansion of project goals over time", "A tendency for project team members to work more slowly as deadlines approach", "The process of defining and documenting project requirements", "Uncertainty regarding project duration and cost estimation", "The risk that the project will not meet the quality objectives"],
+["Obtaining the project requirements by applying the necessary knowledge, tools and techniques is called project management", "Failure to meet project requirements by applying the necessary knowledge, tools, and techniques is called project management.", "The next steps to be taken in each of them are called project management", "Carrying out daily tasks using tools and techniques is called project management", "Meeting stakeholder expectations is called project management"],
+["achieves business goals", "alienates customers", "limitations are increasing", "risks are not regulated", "resources are decreasing"],
+["Meets stakeholder expectations", "Removes limitations", "Risks are not regulated", "It alienates customers", "Changes are not implemented"],
+["Delivers the right products at the right time", "Produces an effective product", "Changes are not implemented", "Resources are not being used properly", "It alienates interested parties"],
+["Responds to risks in a timely manner", "Removes limitations", "Changes are not implemented", "Business goals are not being met", "Resources are not being used properly"],
+["It optimizes the use of resources", "Business goals are not being met", "It alienates interested parties", "Changes are not implemented", "Limitations multiply"],
+["Manages constraints", "It alienates interested parties", "Resources are not being used properly", "Business goals are not being met", "Changes are not implemented"],
+["Manages changes properly", "Removes limitations", "Risks are not regulated", "Business goals are not being met", "Resources are not being used properly"],
+["initiation, planning, implementation, monitoring, closure", "initiation, verification, execution, monitoring, closure", "initiation, planning, implementation, monitoring, change", "initiation, planning, inspection, monitoring, closure", "initiation, planning, implementation, change, closure"],
+["initiation, planning, implementation, monitoring, closure", "planning, initiation, implementation, monitoring, closure", "initiation, monitoring, execution, planning, closure", "implementation, initiation, planning, monitoring, closure", "initiation, planning, closure, implementation, monitoring"],
+["beginning", "planning", "inspection", "execution", "closure"],
+["In the agile management method, all work is repeatedly planned and executed in small time intervals", "The waterfall method is used in the agile management method", "In the agile management method, all work is performed directly with small time intervals", "In the agile management method, all work is repeatedly planned and executed in parts over a long period of time", "In the agile management method, the entire work is performed in parts without repeated planning, with small time intervals"],
+["Minimum applicable product", "Maximum demand product", "Necessary product", "Required product", "The product used"],
+["necessary funding and resources", "to finance", "to the resource", "on time and budget", "to the company"],
+["due to internal business needs", "according to the customer's opinion", "at the request of interested parties", "due to renewal of services", "at the request of the product owner"],
+["due to external influences", "according to the customer's opinion", "at the request of interested parties", "due to renewal of services", "at the request of the product owner"],
+["Once the eligibility decision is made", "As the project begins", "In the implementation phase", "After the charter", "From the first day"],
+["Management method", "Start and end date", "Key stakeholders", "Name of the project", "Name of project sponsor"],
+["Expert opinion, data collection", "The work of the project manager", "Scope", "Position of the product owner", "Sponsor"],
+["Functionalities", "Budget", "Time", "Resource", "Finance"],
+["work to be done", "performance of operations", "changes", "stakeholders", "product"],
+["other company", "company employees", "customers", "government agencies", "Project Manager"],
+["government agencies", "Company employees", "Project Manager", "Board of Directors", "Scrum team"],
+["Stakeholder classification", "Division of work", "Preparation of documents", "Team", "Customer demand"],
+["synthesis of traditional and flexible method", "traditional method", "flexible method", "variable", "finished product"],
+["demand", "budget", "resource", "finance", "product"],
+["finance", "work to be done", "quality plan", "supply plan", "the price"],
+["program", "observation", "request", "comparison", "interview"],
+["Inquiry", "Internet", "Network", "Operator", "Moderator"],
+["being specific", "being variable", "by being inconsistent", "by being functional", "being unlimited"],
+["Specific, Measurable, Achievable, Relevant, Timely", "Simple, manageable, applicable, realistic, timely", "Strategic, Methodical, Aligned, Results oriented, Time driven", "Measurable, Measurable, Attainable, Resourceful, Targeted", "Systematic, Meaningful, Accountable, Reliable, Transparent"],
+["SMART", "Scrum", "Backlog", "FRAME", "Sprint"],
+["Hierarchical decomposition of the project into smaller and more manageable components", "List of project team members", "A Gantt chart depicting the project schedule", "A document reflecting the budget of the project", "Risk management plan for the project"],
+["Work Breakdown Structure", "Earned value analysis", "Budget evaluation", "Fishbone diagram", "Why Technique"],
+["Sequence diagram", "Why Technique", "WBS", "Expert Judgment", "Earned value analysis"],
+["start-to-work", "finish-to-start", "finish-to-finish", "start-to-finish", "start-to-start"],
+["Expert Judgment", "Analogous Estimating", "Parametric Estimation", "Three-point Estimating", "Bottom-up Estimating"],
+["Analogous Estimating", "Parametric Estimation", "Three-point Estimating", "Bottom-up Estimating", "Expert Judgment"],
+["Three-point Estimating", "Analogous Estimating", "Parametric Estimation", "Bottom-up Estimating", "Expert Judgment"],
+["Parametric Estimation", "Three-point Estimating", "Bottom-up Estimating", "Expert Judgment", "Analogous Estimating"],
+["Bottom-up Estimating", "Expert Judgment", "Analogous Estimating", "Parametric Estimation", "Three-point Estimating"],
+["Project managers", "of customers", "Sponsors", "Customers", "State bodies"],
+["Network diagram", "Gantt chart", "Kanban board", "The structure of the division of labor", "Risk matrix"],
+["Providing financial support and high-level direction for the project", "Manage the day-to-day activities of the project", "Managing project related issues and concerns", "Ensuring that the project meets quality standards", "Coordination among stakeholders"],
+["Monitoring and control", "Execution", "beginning", "Connection", "Planning"],
+["Ensuring that changes are documented, evaluated and approved before implementation", "To prevent any changes to the project", "Track changes to project scope, schedule, and budget", "Evaluating the success of the project after completion", "Identify potential changes in the project's risk profile"],
+["project cost planning", "planning services", "consideration of changes", "customer requests", "sponsors"],
+["calculation of project costs", "consideration of changes", "customer requests", "planning services", "the software"],
+["verification of project costs", "planning services", "consideration of changes", "the software", "execution of operations"],
+["project cost estimation", "consideration of changes", "the software", "execution of operations", "customer requests"],
+["collection of project costs", "verification of project costs", "project cost planning", "calculation of project costs", "project cost estimation"],
+["25-75%", "0-5%", "5%", "5-10%", "85-95%"],
+["5-10%", "30-45%", "25-50%", "25-75%", "50-60%"],
+["the condition of the product", "budget control", "schedule control", "expenses", "end date"],
+["budget control", "employees", "the software", "requirements", "expectations"],
+["From detailed receipt of users' requirements", "Since the software is ready", "From proper cost management", "All work is done on time", "From the use of resources"],
+["From fully documenting requirements", "From handing over the work to be done according to the schedule", "From the use of resources", "From the work of the network administrator", "From proper cost management"],
+["Obtaining consent from all interested parties", "Since the software is ready", "From proper cost management", "All work is done on time", "From the use of resources"],
+["Of the processes assigned to deal with changes", "From handing over the work to be done according to the schedule", "From the use of resources", "From the work of the network administrator", "From proper cost management"],
+["Processes for quality control and management", "All work is done on time", "From the use of resources", "Since the software is ready", "From proper cost management"],
+["Location risk", "Plan for risks", "Cost risk", "Quality risk", "Resource risk"],
+["fishbone diagram", "sequence diagrams", "tree diagram", "step chart", "algorithm"],
+["of real customers", "of project managers", "of specialists", "of sponsors", "of employees"],
+["Flexible", "Waterfall", "Traditional", "Sigma", "Circle"],
+["Project charter", "Scope statement", "The structure of the division of labor", "Project management plan", "Statement of work"],
+["Determining the goals and requirements of the project", "Preparation of detailed project plan", "Implementation of project tasks according to plan", "Monitoring and controlling the progress of the project, making necessary adjustments", "Completion of all project activities and formal closure of the project"],
+["Preparation of detailed project plan", "Implementation of project tasks according to plan", "Monitoring and controlling the progress of the project, making necessary adjustments", "Completion of all project activities and formal closure of the project", "Determining the goals and requirements of the project"],
+["Implementation of project tasks according to plan", "Monitoring and controlling the progress of the project, making necessary adjustments", "Completion of all project activities and formal closure of the project", "Determining the goals and requirements of the project", "Preparation of detailed project plan"],
+["Monitoring and controlling the progress of the project, making necessary adjustments", "Completion of all project activities and formal closure of the project", "Determining the goals and requirements of the project", "Preparation of detailed project plan", "Implementation of project tasks according to plan"],
+["Completion of all project activities and formal closure of the project", "Determining the goals and requirements of the project", "Preparation of detailed project plan", "Implementation of project tasks according to plan", "Monitoring and controlling the progress of the project, making necessary adjustments"],
+["the purpose of the project", "Individuals and communication", "A working program", "Cooperation with the client", "Responding to change"],
+["it is superior to process and tools", "superior to complicated documentation", "is superior to the running program", "superior to contractual agreements", "better than following a plan"],
+["superior to complicated documentation", "superior to contractual agreements", "better than following a plan", "superior to cooperation with the client", "it is superior to process and tools"],
+["superior to contractual agreements", "is superior to the running program", "superior to complicated documentation", "it is superior to process and tools", "better than following a plan"],
+["better than following a plan", "superior to contractual agreements", "it is superior to process and tools", "superior to complicated documentation", "transcends individuals and communication"],
+["Self-managing teams can come up with the best architecture, requirements and design", "Monitoring and controlling the progress of the project, making necessary adjustments", "The next steps to be taken in each, the management of the projects to be realized", "Iterating or implementing new business or technological strategies", "Implementation of project tasks according to plan"],
+["MoSCoW technique", "Critical method", "Program evaluation", "Gantt chart", "SWOT analysis"],
+["in Japan", "in Germany", "In America", "in France", "in Italy"],
+["1950", "1995", "1915", "2015", "2000"],
+["in Japan", "In America", "in Finland", "in Italy", "in Greece"],
+["At the end of the 20th century", "At the beginning of the 19th century", "In the 21st century", "At the beginning of the 20th century", "At the end of the 19th century"],
+["Traditional management method", "Spotify management method", "Classical management method", "A method of self-management", "Individual management method"],
+["In America", "in Japan", "in Turkey", "in Russia", "in France"],
+["All persons who have an influence on the project product or who will be affected by this project", "A person who invests money in a project", "The person responsible for project tasks", "A person who is an expert in the project field", "Person responsible for project management"],
+["Responding to change", "the purpose of the project", "Individuals and communication", "A working program", "Cooperation with the client"],
+["A working program", "Responding to change", "the purpose of the project", "Individuals and communication", "Cooperation with the client"],
+["Individuals and communication", "Cooperation with the client", "A working program", "Responding to change", "the purpose of the project"],
+["Individuals and communication", "Responding to change", "the purpose of the project", "Cooperation with the client", "A working program"],
+["Individuals and communication", "Cooperation with the client", "A working program", "Responding to change", "the purpose of the project"],
+["Individuals and communication", "Responding to change", "the purpose of the project", "Cooperation with the client", "A working program"],
+["A working program", "Responding to change", "the purpose of the project", "Individuals and communication", "Cooperation with the client"],
+["Cooperation with the client", "A working program", "Responding to change", "the purpose of the project", "Individuals and communication"],
+["A working program", "Responding to change", "the purpose of the project", "Individuals and communication", "Cooperation with the client"],
+["A working program", "Responding to change", "Individuals and communication", "Cooperation with the client", "the purpose of the project"],
+["Individuals and communication", "Responding to change", "the purpose of the project", "Cooperation with the client", "A working program"],
+["Individuals and communication", "Cooperation with the client", "A working program", "Responding to change", "the purpose of the project"],
+["To serve as a comprehensive guide for project execution, monitoring and control", "Describe the high-level goals and constraints of the project", "Document the project budget and financial requirements", "Identify and categorize stakeholders by level of interest and influence", "Ensuring that changes are documented, evaluated and approved before implementation"],
+["Ensure project information is shared with relevant stakeholders in a timely and efficient manner", "Describe the high-level goals and constraints of the project", "Break the project down into smaller, manageable components", "Allocate resources to project tasks", "To serve as a comprehensive guide for project execution, monitoring and control"],
+["Identify, analyze and prioritize project risks and mitigation strategies", "Document the project budget and financial requirements", "Track changes to project scope, schedule, and budget", "To serve as a comprehensive guide for project implementation, monitoring and control", "Establishing communication channels between stakeholders"],
+["Scrum", "Kanban", "Spotify", "Lean startup", "ScrumThis"],
+["Scrum", "Kanban", "Waterfall", "PRINCE2", "Sigma"],
+["Leader responsible for project planning, execution and closure", "A technical expert responsible for the completion of project work", "Financial analyst responsible for project budget management", "Customer representative responsible for defining project requirements", "Quality assurance specialist responsible for ensuring that the project meets quality standards"],
+["Provide a detailed description of project deliverables and the work required to achieve them", "Describe the high-level goals and constraints of the project", "To serve as a comprehensive guide for project execution, monitoring and control", "Identify and categorize stakeholders by level of interest and influence", "Ensuring that changes are documented, evaluated and approved before implementation"],
+["Introduce the project team and stakeholders and set expectations for the project", "Prepare the project charter", "Create a project management plan", "Finalize project scope, schedule and budget", "Identify and prioritize project risks"],
+["Manage the impact of changes on project scope, schedule and cost", "To prevent changes from occurring", "Ensure all changes are approved by the project sponsor", "Identify potential changes in the project's risk profile", "Updating the project management plan to reflect approved changes"],
+["Assign and schedule resources (eg, team members, equipment, materials) for project tasks", "Describe the high-level goals and constraints of the project", "Ensure project information is shared with relevant stakeholders in a timely and efficient manner", "Break the project down into smaller, manageable components", "To serve as a comprehensive guide for project execution, monitoring and control"],
+["Propose changes to the project and provide information needed for the change control process", "Track changes to project scope, schedule, and budget", "Identify, analyze and prioritize potential project risks and mitigation strategies", "Document the project budget and financial requirements", "Establishing communication channels between stakeholders"],
+["Project budget", "Objectives of the project", "Results of the project", "Project limitations", "Assumptions of the project"],
+["Ishikawa Diagram (Fishbone Diagram)", "Network diagram", "Kanban board", "Pareto chart", "Gantt chart"],
+["Quality Assurance Manager", "Product owner", "Scrum master", "Team member", "Project sponsor"],
+["Power-interest matrix", "Gantt chart", "Critical Path Method", "Work Breakdown Structure (WBS)", "Quality assurance"],
+["Composition of the team", "Time", "Scope", "Quality", "Cost"],
+["Reduces wastage", "Costs are increasing", "individual work", "Work without a team", "It's distracting"],
+["1990", "2000", "1995", "1950", "2015"],
+["Emipirism", "To complexity", "To personal opinions", "To extravagance", "To work without a plan"],
+["To the Lean way of thinking", "To distraction", "To abstain", "To complexity", "To extravagance"],
+["Framework", "Backlog", "Product", "Project", "Master"],
+["transparency", "organization", "skill", "command", "complexity"],
+["inspection", "mediation", "precision", "complexity", "organization"],
+["adaptation", "togetherness", "problem", "product", "instruction"],
+["The process and tasks that emerge from the training should be visible to the people who implement them and accept them . _ _ _ _ _ _ _ _ _ _ _ _ _ _", "Scrum artefacts and audit trails are used to uncover potentially undesirable bugs or issues . _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ should not be checked frequently and appropriately _ _", "The process and tasks that emerge from the training should be confidential to those who perform them and accept them . _ _ _ _ _ _ _ _ _ _ _ _ _", "In order to minimize the possibility of occurrence of canary situations , there should be no corrections . _ _ _ _ _", "When any aspect of the process is accepted beyond the limit , or when the resulting product cannot be produced in a market , t _ _ _ _ _ _ _ _ _ _ _ Adjustments should be made to the applied process or manufactured materials . _ _ _ _"],
+["When any aspect of the process is accepted beyond the limit , or when the resulting product cannot be produced in a market , t _ _ _ _ _ _ _ _ _ _ _ The process applied or the materials produced must be corrected . _ _ _ _", "The process and tasks that emerge from the training should be confidential to those who perform them and accept them . _ _ _ _ _ _ _ _ _ _ _ _ _", "In order to minimize the possibility of occurrence of canary situations , there should be no corrections . _ _ _ _ _", "When any aspect of the process is accepted beyond the limit , or when the resulting product cannot be produced in a market , t _ _ _ _ _ _ _ _ _ _ _ Adjustments should be made to the applied process or manufactured materials . _ _ _ _", "Scrum artefacts and audit trails are used to uncover potentially undesirable bugs or issues . _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ should not be checked frequently and appropriately _ _"],
+["Scrum artefacts and audit trails are used to uncover potentially undesirable bugs or issues . _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ should be checked frequently and appropriately _ _ _", "The process and tasks that emerge from the training should be confidential to those who perform them and accept them . _ _ _ _ _ _ _ _ _ _ _ _ _", "Scrum artefacts and audit trails are used to uncover potentially undesirable bugs or issues . _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ should not be checked frequently and appropriately _ _", "When any aspect of the process is accepted beyond the limit , or when the resulting product cannot be produced in a market , t _ _ _ _ _ _ _ _ _ _ _ Adjustments should be made to the applied process or manufactured materials . _ _ _ _", "In order to minimize the possibility of occurrence of canary situations , there should be no corrections . _ _ _ _ _"],
+["Obligation", "Patience", "Opportunity", "We can", "Tolerance"],
+["Focus", "Exactly", "Fluent", "We can", "Opportunity"],
+["Openness", "Secrecy", "Resistant", "Long term", "Patient"],
+["Respect", "Careless", "Indifference", "Tolerance", "You don't care"],
+["Courage", "Fear", "Hidden", "Without measures", "Unprepared"],
+["scrum team", "interesting side", "product", "requirements", "instruction"],
+["Achieving goals", "Little work in a long time", "Interesting side", "Sponsor", "Product owner"],
+["Scrum master", "Interesting side", "Customer", "Chairman", "Sponsor"],
+["Product owner", "Organizer", "Entrepreneur", "Focus group", "Trainer"],
+["Developer _ _", "Operators", "Mechanics", "Founders", "colleagues"],
+["Sprint", "Rule", "Demand", "Order", "Free"],
+["10 and less", "15 and under", "11 and more", "20", "17"],
+["Create a sprint backlog", "Get things done fast", "Assemble the team", "Calculate costs", "To divide the work"],
+["Instilling quality", "Divide into degrees", "Work fast", "Complete the table", "Assemble the team"],
+["Adaptation towards the sprint goal", "Calculate costs", "To divide the work", "Get things done fast", "Assemble the team"],
+["Professional responsibility", "To organize", "To mediate", "To speed up the work", "Looking for a sponsor"],
+["Product Goal Formulation and Clear Communication _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "To have the software ready", "To proper cost management", "All work to be done on time", "To use resources"],
+["Preparation and disclosure of Product Backlog items _ _ _ _ _ _ _ _ _ _ _ _ _", "Creating a duplicate product or service", "Removal of restrictions", "To fulfill the wishes of interested parties", "To prevent change"],
+["Sequential listing of Product Backlog items _ _ _ _ _ _ _", "Preparation of the project charter", "Creating a project management plan", "Finalization of project scope, schedule and budget", "Identify and prioritize project risks"],
+["Ensure that the Product Backlog is transparent , visible and understandable _ _ _ _ _ _ _", "To fulfill the wishes of interested parties", "To prevent change", "To have the software ready", "Finalization of project scope, schedule and budget"],
+["One person person", "Team", "Mediator", "Sponsor", "Committee"],
+["Product owner", "Sponsor", "With the client", "With the committee", "With colleagues"],
+["To build Scrum", "To prepare the schedule", "To conduct the experiment", "Preparation of documents", "To the preparation of the backlog"],
+["Effectiveness of the Scrum Team", "To prepare the schedule", "To conduct the experiment", "Preparation of documents", "To the preparation of the backlog"],
+["Scrum master", "Product owner", "Developer", "Sponsor", "Operator"],
+["Mediator", "Operator", "Programmer", "Designer", "Servant"],
+["Teacher", "Product owner", "Servant", "Operator", "Sponsor"],
+["A servant leader", "Operator", "Product owner", "Sponsor", "Designer"],
+["Self - management and cross - functional coaching of team members _ _ _ _ _ _ _ _ _ _", "Help the Scrum Team focus on creating low - cost Increments according to ready criteria _ _ _ _ _ _", "Failure to remove obstacles to ensure smooth operation of the Scrum Team _ _ _ _ _", "supporting and demotivating team members", "Be aware of negative and counter productive delays in all Scrum activities . _ _ _ _ _ _ _ _"],
+["Help the Scrum Team focus on creating high quality Increments that meet the criteria set by the Scrum Team _ _ _ _", "Help the Scrum Team focus on creating low - cost Increments according to ready criteria _ _ _ _ _ _", "Failure to remove obstacles to ensure smooth operation of the Scrum Team _ _ _ _ _", "supporting and demotivating team members", "Be aware of negative and counter productive delays in all Scrum activities . _ _ _ _ _ _ _ _"],
+["Removing obstacles to ensure smooth operation of the Scrum Team _ _ _ _ _ _ _", "supporting and demotivating team members", "Be aware of negative and counter productive delays in all Scrum activities . _ _ _ _ _ _ _ _", "Help the Scrum Team focus on creating low - cost Increments according to ready criteria _ _ _ _ _ _", "Failure to remove obstacles to ensure smooth operation of the Scrum Team _ _ _ _ _"],
+["Ensuring that all Scrum activities are carried out in a positive and productive manner and are carried out in a timely manner _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "Help the Scrum Team focus on creating low - cost Increments according to ready criteria _ _ _ _ _ _", "Failure to remove obstacles to ensure smooth operation of the Scrum Team _ _ _ _ _", "supporting and demotivating team members", "Be aware of negative and counter productive delays in all Scrum activities . _ _ _ _ _ _ _ _"],
+["Helping to find appropriate methods for effective implementation of product goal setting and Product Backlog management processes _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ to be", "Help the Scrum Team understand the requirements for preparing requirements in a mixed format _", "Assist in establishing poor quality product planning for a complex environment _ _ _ _ _ _ _ _", "Please feel free to contact us if you are interested . _ _ _ _ _ _ _ Failure to establish a business relationship _ _ _", "Assist in finding appropriate methods for Product Goal Failure and Product Backlog Management _ _ _ _ _ _ _ _ _ _"],
+["Help the Scrum Team understand the need to prepare Product Backlog items in a clear and concise format _ _ _ _ _", "Please feel free to contact us if you are interested . _ _ _ _ _ _ _ Failure to establish a business relationship _ _ _", "Assist in finding appropriate methods for Product Goal Failure and Product Backlog Management _ _ _ _ _ _ _ _ _ _", "Help the Scrum Team understand the requirements for preparing requirements in a mixed format _", "Assist in establishing poor quality product planning for a complex environment _ _ _ _ _ _ _ _"],
+["Help build empirical product planning for a complex environment _ _ _ _ _ _ _ _ _ _", "Help the Scrum Team understand the requirements for preparing requirements in a mixed format _", "Assist in establishing poor quality product planning for a complex environment _ _ _ _ _ _ _ _", "Please feel free to contact us if you are interested . _ _ _ _ _ _ _ Failure to establish a business relationship _ _ _", "Assist in finding appropriate methods for Product Goal Failure and Product Backlog Management _ _ _ _ _ _ _ _ _ _"],
+["Please feel free to contact me if you are interested _ _ _ _ _ _ _ _ Facilitate the process of establishing a partnership _ _ _ _ _", "Please feel free to contact us if you are interested . _ _ _ _ _ _ _ Failure to establish a business relationship _ _ _", "Assist in finding appropriate methods for Product Goal Failure and Product Backlog Management _ _ _ _ _ _ _ _ _ _", "Help the Scrum Team understand the requirements for preparing requirements in a mixed format _", "Assist in establishing poor quality product planning for a complex environment _ _ _ _ _ _ _ _"],
+["I teach Scrum , teach , train , and coach . _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "Planning and implementing Spotify implementation within the organization _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "To prevent and promote the implementation of an empirical approach to research and research of interest _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "Interested in communicating with the Scrum Team ? _ _ _ _ _ _ _ _ _ _ _ _ _", "I did n't learn Scrum because I was n't interested in learning about Scrum . _ _ _ _"],
+["Planning and implementing Scrum within the organization _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "To prevent and promote the implementation of an empirical approach to research and research of interest _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "Interested in communicating with the Scrum Team ? _ _ _ _ _ _ _ _ _ _ _ _ _", "I did n't learn Scrum because I was n't interested in learning about Scrum . _ _ _ _", "Planning and implementing Spotify implementation within the organization _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"],
+["Helping students understand and apply an empirical approach to research of interest _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ to be a mch i", "Interested in communicating with the Scrum Team ? _ _ _ _ _ _ _ _ _ _ _ _ _", "I did n't learn Scrum because I was n't interested in learning about Scrum . _ _ _ _", "Planning and implementing Spotify implementation within the organization _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "To prevent and promote the implementation of an empirical approach to research and research of interest _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"],
+["Interested in joining the Scrum Team ? _ _ _ _ _ _ _ Eliminating all the problems _ _ _ _", "I did n't learn Scrum because I was n't interested in learning about Scrum . _ _ _ _", "Planning and implementing Spotify implementation within the organization _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "To prevent and promote the implementation of an empirical approach to research and research of interest _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _", "Interested in communicating with the Scrum Team ? _ _ _ _ _ _ _ _ _ _ _ _ _"],
+["Sprint", "Excel", "Sql", "Database", "None"],
+["Sprint", "Product", "Documents", "Tender", "None"],
+["Product owner", "Scrum master", "Sponsor", "Collaborator", "Operator"],
+["Sprint target", "Done works", "Events", "Tables are ready", "Trainings"],
+["Sprint planning", "Sprint review", "Sprint", "Sprint retrospective", "Scrum master"],
+["Sprint Backlog", "Scrum", "Scrum master", "Product backlog", "Sprint"],
+["Obtaining approvals from sponsors", "No changes are made that would jeopardize the Sprint Goal _", "The quality does not fall below the stone _", "The product backlog is fully recovered as soon as it is created", "For more information , please contact the Product owner . _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"],
+["15 minute meeting", "3 hour session", "1 hour work", "Employment", "A break"],
+["Sprint review", "Scrum team", "Backlog", "Product", "Team"],
+["Development team", "Scrum team", "Product owner", "Scrum master", "No one"],
+["Sprint retrospective", "Daily scrum", "Sprint backlog", "Sprint planning", "Sprint review"],
+["Product target", "Done works", "Preparation criteria", "Sprint planning", "Sprint backlog"],
+["A long-term goal", "A non-essential target", "Preparation criteria", "A short-term goal", "Unlimited task"],
+["Product backlog", "Increment-in", "Sprint goal", "Scrum master's", "Product owner's"],
+["Sprint target", "Product target", "Interesting side", "Preparation criteria", "Product backlog"],
+["Preparation criteria", "Sprint target", "Interesting side", "Product backlog", "Done works"],
+["Product backlog", "Sprint backlog", "Sprint planning", "Daily scrum", "Sprint retrospective"],
+["Product owner", "Developer", "Sponsor", "Scrum master", "Project Manager"],
+["Product owner", "Project Manager", "Collaborators", "Operator", "Scrum master"],
+["Self-managing teams", "Lack of commitment", "Being dependent on everyone", "Preference for individual work", "Not to be held liable"],
+["Work productively", "Being dependent on everyone", "Not to be held liable", "Failure to bear responsibility", "Preference for individual work"],
+["Developers", "Your colleagues", "Stakeholders", "State bodies", "Operators"],
+["4 hours", "1 hour", "7 hours", "45 min", "2 hours"],
+["3 hours", "1 hour", "4 hours", "30 min", "2 hours"],
+["Sprint backlog", "Product backlog", "Daily scrum", "Sprint review", "Scrum"],
+["Sprint backlog", "Product backlog", "Daily scrum", "Sprint review", "Scrum"],
+["Risk", "Scope", "Budget", "Time", "Demand"],
+["Events or conditions that threaten the successful completion of the project", "Extra benefits for successful project completion", "Events and conditions provided to enhance or meet the project's revenue, objectives, or timeline", "Increased revenue for successful completion of the project", "Events or conditions that ensure the successful completion of a project"],
+["Events and conditions provided to enhance or meet the project's revenue, objectives, or timeline", "Events or conditions that threaten the successful completion of the project", "Events and conditions that threaten the project's income and objectives", "Financial errors of the project, low speed of activity", "Problems that violate or threaten project goals or standards"],
+["extra benefits _ _ _ _ _ _", "take action _ _ _ of speed _ _ _ _ _ not having a low _ _", "financial errors _ _ _ _", "transportation _ _ with problems _", "standards _ _ violation"],
+["financial errors _ _ _ _", "Come on _ _ _ increase i", "extra benefits _ _ _ _ _ _", "better service and product", "time increase the plan _ _ _ _"],
+["Situations that limit the successful completion of the project, are warning and preventable", "Uncontrollable events and conditions", "In the project, the results and processes are completely uncertain situations", "Uncertainty of projects", "Unexpected events in project planning and management processes"],
+["In the project, the results and processes are completely uncertain situations", "Situations that limit the successful completion of the project, are warning and preventable", "The result is a predictable situation", "It is a controlled situation", "Appraisal feasibility"],
+["Uncertain", "Determination of risks", "Evaluation", "Prevention", "Arrangement of monitoring"],
+["Risk Adjusted Backlog", "Risk chart", "Product backlog", "Sprint backlog", "Product owner"],
+["Division of affairs", "Provision of the project", "Project management", "Monitoring", "Mutual trust"],
+["Communication management", "Risk management", "Time management", "Budget management", "Team management"],
+["Acceptance and organization of the project", "Budget evaluation", "Calculation of the budget", "Preparation of the sprint", "Product backlog execution"],
+["Resources _ _ t e yinat i", "Preparation of sprint backlog", "Budget evaluation", "Product backlog execution", "Preparation of the sprint"],
+["I cra plan i n i n arrangement _ _ don't do it", "Budget evaluation", "Calculation of the budget", "Preparation of the sprint", "Product backlog execution"],
+["I cra stage _ _ _ _ _ _ management _ _ _ _", "Preparation of sprint backlog", "Budget evaluation", "Product backlog execution", "Preparation of the sprint"],
+["Have problems _ solution _ _ not done _", "Budget evaluation", "Calculation of the budget", "Preparation of the sprint", "Product backlog execution"],
+["Evaluation of results", "Preparation of sprint backlog", "Budget evaluation", "Product backlog execution", "Preparation of the sprint"],
+["In the implementation phase", "In the closing phase", "In the planning stage", "In the monitoring phase", "In the initial stage"],
+["In the implementation phase", "In the monitoring phase", "In the initial stage", "In the closing phase", "In the planning stage"],
+["In the implementation phase", "In the planning stage", "In the closing phase", "In the monitoring phase", "In the initial stage"],
+["In the implementation phase", "In the closing phase", "In the monitoring phase", "In the initial stage", "In the planning stage"],
+["In the implementation phase", "In the monitoring phase", "In the planning stage", "In the initial stage", "In the closing phase"],
+["In the implementation phase", "In the initial stage", "In the monitoring phase", "In the closing phase", "In the planning stage"],
+["Implementation process planning", "Change _ _ _ _ of the idea I 'm sorry not done _", "Change _ _ _ _ of the idea Check it out _", "I cra of the process Discord _ _ _ _ _ _ _ _ _", "Acceptance or rejection of the amendment proposal"],
+["Project Manager", "Product owner", "Scrum master", "Interesting side", "Developer"],
+["Status reports", "Project charter", "Work breakdown chart", "Certificate", "Table of assumptions"],
+["Project evaluation", "Implementation process planning", "Change _ _ _ _ of the idea I 'm sorry not done _", "Change _ _ _ _ of the idea Check it out _", "I cra of the process Discord _ _ _ _ _ _ _ _ _"],
+["Time and budget information", "Change _ _ _ _ of the idea Check it out _", "I cra of the process Discord _ _ _ _ _ _ _ _ _", "Implementation process planning", "Change _ _ _ _ of the idea I 'm sorry not done _"],
+["Problems and errors", "Implementation process planning", "Change _ _ _ _ of the idea I 'm sorry not done _", "Change _ _ _ _ of the idea Check it out _", "I cra of the process Discord _ _ _ _ _ _ _ _ _"],
+["Risk and analysis", "Change _ _ _ _ of the idea Check it out _", "I cra of the process Discord _ _ _ _ _ _ _ _ _", "Implementation process planning", "Change _ _ _ _ of the idea I 'm sorry not done _"],
+["Change management", "Implementation process planning", "Change _ _ _ _ of the idea I 'm sorry not done _", "Change _ _ _ _ of the idea Check it out _", "I cra of the process Discord _ _ _ _ _ _ _ _ _"],
+["Issue tracking log", "Product backlog", "Sprint backlog", "Status report", "WBS"],
+["Closing certificate", "Status report", "Daily scrum", "Sprint review", "Tracking log"],
+["Closing certificate", "SWOT analysis", "Daily scrum", "Tracking log", "Sprint review"]
+      ]
+    };
+
+
+
+    let currentQuestionIndex = 0;
+    let shuffledQuestionIndexes = shuffleArray(createArrayUpTo(0, json.questions.length - 1));
+
+    function createArrayUpTo(from, to) {
+      let result = [];
+      for (let i = from; i <= to; i++) {
+        result.push(i);
+      }
+      return result;
+    }
+
+    function shuffleArray(array) {
+      let newArray = array.slice();
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+
+    function createQuestionCard(index) {
+      const questionCard = document.createElement('div');
+      questionCard.classList.add('question-card');
+
+      const questionElement = document.createElement('div');
+      questionElement.classList.add('question');
+      console.log(json.questions[index])
+      questionElement.innerHTML = (index + 1) + "." + json.questions[index].replace(/\n/g, "<br>");
+
+
+      const variantList = document.createElement('ul');
+
+      const originalVariants = json.variants[index];
+      const correctVariant = originalVariants[0];
+      console.log("Duz cavab:" + correctVariant);
+
+      const shuffledVariants = shuffleArray(originalVariants.slice());
+      const letters = ['A)', 'B)', 'C)', 'D)', 'E)'];
+
+      shuffledVariants.forEach((variant, i) => {
+        const variantElement = document.createElement('ul');
+        variantElement.classList.add('variant');
+        variantElement.textContent = `${letters[i]} ${variant}`;
+        variantElement.onclick = () => {
+          checkAnswer(variant, index, correctVariant);
+        };
+        variantList.appendChild(variantElement);
+      });
+
+      questionCard.appendChild(questionElement);
+      questionCard.appendChild(variantList);
+
+      return questionCard;
+    }
+
+    let autoNextEnabled = false; 
+
+
+const autoNextToggle = document.getElementById('autoNextToggle');
+
+autoNextToggle.addEventListener('change', () => {
+  if (autoNextToggle.checked) {
+    console.log("Avtomatik keçid aktivdir.");
+  } else {
+    console.log("Avtomatik keçid deaktivdir.");
+  }
+});
+
+function checkAnswer(selectedVariant, index, correctVariant) {
+  const variantElements = document.querySelectorAll('.variant');
+  let isCorrect = false;
+
+  variantElements.forEach((element, i) => {
+    
+    if ((element.textContent.substring(0, 0) + element.textContent.substring(2)).trim() === correctVariant) {
+      element.style.backgroundColor = 'lightgreen';
+     
+    } 
+    
+    else if ((element.textContent.substring(0, 0) + element.textContent.substring(2)).trim() === selectedVariant) {
+      element.style.backgroundColor = 'lightcoral';
+     
+    }
+    element.onclick = null; 
+  });
+
+  if( selectedVariant == correctVariant ){
+    isCorrect = true
+    } else {
+    isCorrect = false
+  }
+
+
+ 
+  console.log(isCorrect)
+  console.log(autoNextToggle.checked)
+  if (isCorrect && autoNextToggle.checked) {
+    setTimeout(() => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < shuffledQuestionIndexes.length) {
+        showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+      }
+    }, 500); 
+  } 
+}
+
+function showLastLogin() {
+  const uid = getAuth().currentUser.uid;
+  const userRef = ref(database, 'users/' + uid);
+
+  get(userRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+      const lastLogin = userData.lastLogin;
+
+      // Son giriş zamanını ekranda göster
+      document.getElementById("lastLoginDisplay").innerText = "Son Giriş: " + lastLogin;
+    }
+  });
+}
+
+
+function nextQuestion() {
+  if (currentQuestionIndex < shuffledQuestionIndexes.length - 1) {
+    currentQuestionIndex++;
+    showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+  }
+}
+
+    function showQuestion(index) {
+      const questionContainer = document.getElementById('questionContainer');
+      questionContainer.innerHTML = '';
+      questionContainer.appendChild(createQuestionCard(index));
+
+
+      const currentQuestionDisplay = document.getElementById('currentQuestionDisplay');
+      currentQuestionDisplay.textContent = "Sual:" + (currentQuestionIndex + 1);
+
+
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (currentQuestionIndex === 0) {
+        prevBtn.disabled = true;
+      } else {
+        prevBtn.disabled = false;
+      }
+
+      if (currentQuestionIndex === shuffledQuestionIndexes.length - 1) {
+        nextBtn.disabled = true;
+      } else {
+        nextBtn.disabled = false;
+      }
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentQuestionIndex < shuffledQuestionIndexes.length - 1) {
+        currentQuestionIndex++;
+        showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+      } else {
+        alert('Sualları bitirdiniz!');
+      }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+      }
+    });
+
+    showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+
+
+  </script>
+</body>
+
+</html>

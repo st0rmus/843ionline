@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <title>Analoq Qapalı Suallar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .switch-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      white-space: nowrap;
+      margin-right: 10px;
+      margin-top: 10px;
+      padding: 1px;
+    }
+    .switch {
+      margin-left: 7px;
+      position: relative;
+      display: inline-block;
+      width: 34px;
+      height: 20px;
+      margin-top: 2px;
+      margin-bottom: 4px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 12px; width: 12px;
+      border-radius: 50%;
+      left: 4px; bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+    }
+    input:checked + .slider { background-color: #007bff; }
+    input:checked + .slider:before { transform: translateX(14px); }
+
+    .question-card {
+      margin-top: 70px;
+      margin-left: -5px;
+      margin-right: -5px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .question { font-weight: bold; margin-bottom: 10px; }
+    ul { padding-left: 0; }
+    .variant {
+      margin-bottom: 5px;
+      cursor: pointer;
+      padding: 8px;
+      transition: background-color 0.3s ease;
+      list-style: none;
+      border-radius: 4px;
+    }
+    .variant:hover { background-color: rgba(0,123,255,0.08); }
+    .navigation { margin-top: 20px; }
+    .btn {
+      margin-left: -5px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+    .navbar {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      position: fixed;
+      top: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      box-shadow: 0 2px 4px rgb(0,123,255);
+      z-index: 1000;
+    }
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #222;
+      min-width: 200px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+    .dropdown-content a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+    }
+    .dropdown-content a i { margin-right: 10px; }
+    .dropdown-content a:hover { background-color: #007bff; }
+    .dropbtn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+    .dropbtn i { margin-right: 5px; }
+    .dropbtn:hover { background-color: #0056b3; }
+    .show { display: block; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .dark-mode { background-color: #272727; color: white; }
+    .dark-mode .navbar,
+    .dark-mode .dropdown-content,
+    .dark-mode .question-card { background-color: #444; color: white; }
+    .dark-mode .btn { background-color: #1b1b1b; color: #f0f0f0; }
+    .form-container { display: flex; align-items: center; gap: 10px; }
+    form { margin-left: 40px; display: flex; align-items: center; gap: 10px; }
+    input[type="button"] {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    input[type="button"]:hover { background-color: #0056b3; }
+    .current-question { font-size: 15px; font-weight: bold; color: white; }
+    @media (max-width: 768px) {
+      .question-card { margin-top: 100px; }
+      .form-container { margin-left: 20px; display: block; width: 100%; }
+      form { margin-left: 0; width: 100%; display: block; }
+      .btn { width: 100%; margin-bottom: 10px; }
+      .dropdown-content { right: 0; left: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="form-container">
+      <form id="numberForm">
+        <input type="number" id="fromNumber" name="fromNumber" min="1" placeholder="Başlama">
+        <input type="number" id="toNumber" name="toNumber" min="1" placeholder="Bitmə">
+        <input type="button" value="Axtar" onclick="getNumber()">
+      </form>
+    </div>
+    <div class="current-question" id="currentQuestionDisplay">Sual: 1</div>
+    <div class="dropdown">
+      <button class="dropbtn" onclick="toggleDropdown()">
+        <i class="fa fa-user"></i> İstifadəçi
+      </button>
+      <div class="dropdown-content" id="dropdownContent">
+        <a href="login.html"><i class="fa fa-home"></i> Əsas səhifə</a>
+        <a href="imtahan.html"><i class="fa fa-pen"></i> İmtahan</a>
+        <a href="analog.html"><i class="fa fa-check-square"></i> Analoq açıq suallar</a>
+        <a href="#" onclick="toggleDarkMode()"><i class="fa fa-moon"></i> Qaranlıq rejim</a>
+        <a href="#" onclick="showInfo()"><i class="fa fa-comment"></i> Təklif və iradlar</a>
+        <a href="#" onclick="logout()"><i class="fa fa-sign-out-alt"></i> Çıxış</a>
+        <div class="switch-container">
+          <label class="switch">
+            <input type="checkbox" id="autoNextToggle">
+            <span class="slider"></span>
+          </label>
+          <span>Avtomatik keçid</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="questionContainer"></div>
+  <div class="navigation">
+    <button class="btn" id="prevBtn">Əvvəlki</button>
+    <button class="btn" id="nextBtn">Sonrakı</button>
+  </div>
+
+  <script>
+    const json = {
+      questions: [
+        "5a What are the characteristics of the project?",
+        "9a What makes a project different from a day job?",
+        "15a Why is a project created?",
+        "19a Which of these are project management constraints?",
+        "23a Which of the following is a management method?",
+        "26a How does the agile management method differ from the traditional management method?",
+        "28a Which statement about project management is true?",
+        "42a For what reasons can a project be started?",
+        "47a What is the product and project scope?",
+        "54a Which of the following is not determined as a result of gathering requirements?",
+        "58a Which of the following characterizes the SMART technique?",
+        "61a Which of the following is a work breakdown diagram and what is its structure?",
+        "66a Which estimation method finds the value between the best estimate and the worst estimate?",
+        "69a Who uses a Gantt chart and why?",
+        "71a Which of the following activities represents the role of the project sponsor?",
+        "76a Which statement about cost management is true?",
+        "81a What can we control through earned value analysis?",
+        "85a Which of the following should the project manager ensure during quality management?",
+        "90a Who were the UAT tests prepared for?",
+        "93a What is the main purpose of the initial stage in project management and what document is prepared?",
+        "101a Which of the following refers to the Customer Collaboration value of Agile?",
+        "108a When and where did Agile methodology originate?",
+        "114a \"Businessmen and programmers must work together on a daily basis during the project.\" What value statement is the principle?",
+        "120a \"Constant attention to technical excellence and sound design increases agility.\" What value statement is the principle?",
+        "126a Which of the following characterizes the purpose of the project's risk register?",
+        "129a Which of the following describes the role and responsibility of the project manager?",
+        "134a Which of the following is the main purpose of a project change request form?",
+        "143a What is Scrum and which of the following is it based on?",
+        "147a Which of the following are the foundations of scrum?",
+        "150a Which of the following represents a checkpost in Scrum theory?",
+        "155a In which line are the values of Scrum correctly mentioned?",
+        "159a Which of the following are components of a scrum team?",
+        "163a Developers are always responsible for which of the following?",
+        "Who is responsible for the effective management of the Product Backlog?",
+        "172a With whom do stakeholders agree on changes to the Product backlog?",
+        "Scrum Team Leader and what is his main role in serving the Scrum Team and larger organizations?",
+        "In which of the following ways does the Scrum Master serve the Scrum Team?",
+        "In what way does the Scrum Master serve the organization?",
+        "193a Who among the following has the authority to terminate Sprint?",
+        "200a What is the executive team in the implementation phase of project management?",
+        "204a Sprint backlog is based on what and by whom?",
+        "206a On which line are Scrum artifacts correctly specified?",
+        "215a What action plan is used to create an Increment?",
+        "217a Which of the following are defined as unexpected events or conditions in project management?",
+        "222a How can risks affect project management?",
+        "225a Which of the following methods provides a powerful way to avoid project risks and successfully accomplish the project objective?",
+        "229a The project manager should be fully responsible for what task during the implementation phase of the project?",
+        "242a Which of the following documents allow accurate and objective analysis and registration of the project implementation process?",
+        "244a Which of the following status reports are used to detail the time and budget of the works performed during the project execution process?",
+        "249a Which document reflects the completion of the implementation process of a project?"
+      ],
+      variants: [
+        ["Having a start and end date, creating a new product", "Having a start and end date, creating a repeated product or service", "creation of a new product, non-unique activity", "creating a new product, having a variable resource", "No time limit, start and end date"],
+        ["having work done for new goals after achievement", "being an ongoing day job", "being a repetitive and unique activity", "creating a recycled product", "being a day job to earn some profit"],
+        ["To change or implement new business or technological strategies", "Having a start and end date, creating a repeated product or service", "To replicate or implement new business or technological strategies", "A project is not created due to compliance indicators, law or social requirements", "No time limit, start and end date"],
+        ["time and budget", "stakeholders and time", "budget and risks", "resources and scope", "developers and budget"],
+        ["Traditional and Agile", "Corporate and Agile", "Traditional and Parametric", "Creative and Lean", "Planning and Implementation"],
+        ["Responding to change", "Complex documentation", "Management without a plan", "Lack of time dependence", "Preference for individual work"],
+        ["Obtaining the project requirements by applying the necessary knowledge, tools and techniques is called project management", "Meeting stakeholder expectations is called project management", "Failure to meet project requirements by applying the necessary knowledge, tools, and techniques is called project management", "The next steps to be taken in each of them are called project management", "Carrying out daily tasks using tools and techniques is called project management"],
+        ["due to internal business needs and external influences", "according to external influences and the opinion of the customer", "the wishes of stakeholders and external influences", "internal business needs and updating services", "the request of the product owner and internal business needs"],
+        ["functionalities and things to do", "operations execution and budgeting", "things to do and when", "resources and functionalities", "functionalities and finance"],
+        ["finance and program", "work to be done", "quality plan", "the price", "supply plan"],
+        ["Specific, Measurable, Achievable, Relevant, Timely", "Simple, manageable, applicable, realistic, timely", "Strategic, Methodical, Aligned, Results oriented, Time driven", "Measurable, Measurable, Attainable, Resourceful, Targetable", "Systematic, Meaningful, Accountable, Reliable, Transparent"],
+        ["Work Breakdown Structure, hierarchical", "Earned value analysis, parallel", "Why Technique, consistently", "Budget evaluation, hierarchical", "Fishbone diagram, step by step"],
+        ["Three-point Estimating", "Analogous Estimating", "Parametric Estimation", "Bottom-up Estimating", "Expert Judgment"],
+        ["Project managers, for the record", "For customers, memory", "Sponsors, for calculation", "Customers, for collection", "State authorities, for control"],
+        ["Providing financial support and high-level direction for the project", "Manage the day-to-day activities of the project", "Managing project related issues and concerns", "Ensuring that the project meets quality standards", "Coordination among stakeholders"],
+        ["project cost verification and evaluation", "planning and billing of services", "consideration and planning of changes", "software and verification", "execution and design of operations"],
+        ["To budget and schedule", "to employees and budget", "to expectations and schedule", "to requirements and costs", "to software and expiration date"],
+        ["Obtaining consent from all interested parties", "From the use of resources", "Since the software is ready", "From proper cost management", "All work is done on time"],
+        ["of real customers", "of sponsors", "of project managers", "of specialists", "of employees"],
+        ["Determining the goals and requirements of the project and preparing the project charter", "Preparation of detailed project plan and contract preparation", "Implementation of project tasks according to plan and preparation of implementation plan", "Monitoring and controlling the progress of the project, making necessary adjustments", "Completion of all project activities and formal closure of the project"],
+        ["superior to contractual agreements", "is superior to the running program", "superior to complicated documentation", "it is superior to process and tools", "better than following a plan"],
+        ["At the end of the 20th century, in America", "At the beginning of the 19th century, in Russia", "In the 21st century, in Turkey", "At the beginning of the 20th century, in Japan", "At the end of the 19th century, in America"],
+        ["Individuals and communication", "Cooperation with the client", "the purpose of the project", "A working program", "Responding to change"],
+        ["A working program", "the purpose of the project", "Responding to change", "Individuals and communication", "Cooperation with the client"],
+        ["Identify, analyze and prioritize project risks and mitigation strategies", "To serve as a comprehensive guide for project implementation, monitoring and control", "Document the project budget and financial requirements", "Track changes to project scope, schedule, and budget", "Establishing communication channels between stakeholders"],
+        ["Leader responsible for project planning, execution and closure", "A technical expert responsible for the completion of project work", "Quality assurance specialist responsible for ensuring that the project meets quality standards", "Financial analyst responsible for project budget management", "Customer representative responsible for defining project requirements"],
+        ["Propose changes to the project and provide information needed for the change control process", "Establishing communication channels between stakeholders", "Track changes to project scope, schedule, and budget", "Identify, analyze and prioritize potential project risks and mitigation strategies", "Document the project budget and financial requirements"],
+        ["Framework and the Lean way of thinking", "Artifact and distraction", "Sprint and Cancel", "Team is and Complexity", "Framework and to Extravagance"],
+        ["adaptation, transparency, verification", "collaboration, adaptation, verification", "problem, transparency, guidance", "production, verification, adaptation", "guidance, verification, transparency"],
+        ["Scrum artefacts and audit trails are used to uncover potentially undesirable bugs or issues — should be checked frequently and appropriately", "In order to minimize the possibility of occurrence of canary situations, there should be no corrections", "The process and tasks that emerge from the training should be confidential to those who perform them and accept them", "Scrum artefacts and audit trails are used to uncover potentially undesirable bugs or issues — should not be checked frequently and appropriately", "When any aspect of the process is accepted beyond the limit, adjustments should be made to the applied process or manufactured materials"],
+        ["commitment, focus, openness, respect, courage", "fear, focus, preparation, skill, courage", "secrecy, openness, preparation, control, respect", "careless, check, focus, commitment, openness", "Unprepared, control, respect, courage, focus"],
+        ["Product owner, Scrum master, Developers", "Organizer, Product owner, Scrum master", "Entrepreneur, Scrum master, Developers", "Focus group, Scrum master, Developers", "Trainer, Product owner, Scrum master"],
+        ["Creating a sprint backlog, adaptation towards the sprint goal", "Fast completion of work, participation in daily scrum", "Assembling the team, adapting towards the sprint goal", "Calculate costs, create sprint backlog", "Dividing work, creating a product backlog"],
+        ["Formulation and clear communication of the product goal", "Availability of software and use of resources", "Proper cost management and transparent reporting", "To ensure that all work is carried out on time and progress towards the goal", "Resource utilization and planning"],
+        ["Product owner", "Scrum master", "With the client", "With colleagues", "With the committee"],
+        ["Scrum master and facilitator", "Product owner and intermediary", "Developer and servant leader", "Sponsor and project leader", "Operator and product owner"],
+        ["Removing obstacles to ensure the smooth operation of the Scrum Team", "supporting and demotivating team members", "Be aware of negative and unproductive delays in all Scrum activities", "Failure to remove obstacles to ensure smooth operation of the Scrum Team", "Help the Scrum Team focus on creating low-cost Increments according to ready criteria"],
+        ["I teach Scrum, teach, train, and coach", "Planning and implementing Spotify implementation within the organization", "Interested in communicating with the Scrum Team", "I didn't learn Scrum because I wasn't interested in learning about Scrum", "To prevent and promote the implementation of an empirical approach to research and research of interest"],
+        ["Product owner", "Operator", "Scrum master", "Sponsor", "Collaborator"],
+        ["Development team", "Scrum team", "Product owner", "Scrum master", "No one"],
+        ["Product backlog, developers", "Increment-in operators", "Sprint goal, developers", "Scrum master, leader", "Product owner-in, employees"],
+        ["Product backlog, sprint backlog, increment", "Product goal, Product backlog, sprint backlog", "Stakeholder, sprint backlog, increment", "Readiness criteria, sprint backlog, increment", "Product backlog, Product backlog, sprint backlog"],
+        ["Sprint backlog", "Product backlog", "Daily scrum", "Sprint review", "Scrum"],
+        ["Risk", "Demand", "Scope", "Budget", "Time"],
+        ["Situations that limit the successful completion of the project, are warning and preventable", "project planning and management processes", "Uncontrollable events and conditions", "In the project, the results and processes are completely uncertain situations", "Uncertainty of projects"],
+        ["Risk Adjusted Backlog", "Product backlog internal", "Sprint backlog", "Scrum master", "Product owner"],
+        ["Allocation of resources", "Preparation of the sprint", "Preparation of sprint backlog", "Budget evaluation", "Product backlog execution"],
+        ["Status reports", "Table of assumptions", "Project charter", "Work breakdown chart", "Certificate"],
+        ["Time and budget information", "Change of the idea — not done", "Change of the idea — check it out", "Implementation process — failure to comply", "Implementation process planning"],
+        ["Closing certificate", "Status report", "Daily scrum", "Sprint review", "Tracking log"]
+      ]
+    };
+
+    let currentQuestionIndex = 0;
+    let shuffledQuestionIndexes = shuffleArray(createArrayUpTo(0, json.questions.length - 1));
+
+    function createArrayUpTo(from, to) {
+      let result = [];
+      for (let i = from; i <= to; i++) result.push(i);
+      return result;
+    }
+
+    function shuffleArray(array) {
+      let a = array.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function getNumber() {
+      const from = parseInt(document.getElementById("fromNumber").value) - 1;
+      const to = parseInt(document.getElementById("toNumber").value) - 1;
+      shuffledQuestionIndexes = shuffleArray(createArrayUpTo(
+        Math.max(0, from), Math.min(json.questions.length - 1, to)
+      ));
+      currentQuestionIndex = 0;
+      showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+    }
+
+    function createQuestionCard(index) {
+      const card = document.createElement('div');
+      card.classList.add('question-card');
+
+      const qEl = document.createElement('div');
+      qEl.classList.add('question');
+      qEl.innerHTML = (index + 1) + ". " + json.questions[index].replace(/\n/g, "<br>");
+      card.appendChild(qEl);
+
+      const ul = document.createElement('ul');
+      const originalVariants = json.variants[index];
+      const correctVariant = originalVariants[0];
+      const shuffledVariants = shuffleArray(originalVariants.slice());
+      const letters = ['A)', 'B)', 'C)', 'D)', 'E)'];
+
+      shuffledVariants.forEach((variant, i) => {
+        const li = document.createElement('li');
+        li.classList.add('variant');
+        li.textContent = `${letters[i]} ${variant}`;
+        li.onclick = () => checkAnswer(variant, correctVariant);
+        ul.appendChild(li);
+      });
+
+      card.appendChild(ul);
+      return card;
+    }
+
+    function checkAnswer(selected, correct) {
+      document.querySelectorAll('.variant').forEach(el => {
+        const text = el.textContent.substring(3);
+        if (text === correct) el.style.backgroundColor = 'lightgreen';
+        else if (text === selected && selected !== correct) el.style.backgroundColor = 'lightcoral';
+        el.onclick = null;
+      });
+
+      if (selected === correct && document.getElementById('autoNextToggle').checked) {
+        setTimeout(() => {
+          if (currentQuestionIndex < shuffledQuestionIndexes.length - 1) {
+            currentQuestionIndex++;
+            showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+          }
+        }, 500);
+      }
+    }
+
+    function showQuestion(index) {
+      const container = document.getElementById('questionContainer');
+      container.innerHTML = '';
+      container.appendChild(createQuestionCard(index));
+      document.getElementById('currentQuestionDisplay').textContent = "Sual: " + (currentQuestionIndex + 1);
+      document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+      document.getElementById('nextBtn').disabled = currentQuestionIndex === shuffledQuestionIndexes.length - 1;
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentQuestionIndex < shuffledQuestionIndexes.length - 1) {
+        currentQuestionIndex++;
+        showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+      }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+      }
+    });
+
+    function toggleDropdown() {
+      document.getElementById("dropdownContent").classList.toggle("show");
+    }
+    function logout() { window.location.href = "index.html"; }
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      document.body.style.color = document.body.classList.contains("dark-mode") ? "white" : "black";
+    }
+    function showInfo() { alert("Bura arzular və istəklər verilişi deyil."); }
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn') && !event.target.closest('.dropbtn')) {
+        document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+      }
+    };
+
+    showQuestion(shuffledQuestionIndexes[currentQuestionIndex]);
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, ref, set, onDisconnect, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCISiSeOegesyAaqVsHuRNH7cFtGUUc920",
+      authDomain: "iproject-edf06.firebaseapp.com",
+      projectId: "iproject-edf06",
+      storageBucket: "iproject-edf06.appspot.com",
+      messagingSenderId: "1094280671740",
+      appId: "1:1094280671740:web:4acb1a445f3ffe37bf4279"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const database = getDatabase(app);
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.replace("index.html");
+      } else {
+        const uid = user.uid;
+        get(ref(database, 'users/' + uid + '/rank')).then(snapshot => {
+          if (snapshot.val() === 'guest') window.location.href = 'guest.html';
+        });
+      }
+    });
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        const uid = user.uid;
+        const userRef = ref(database, 'users/' + uid);
+        get(userRef).then(snapshot => {
+          if (snapshot.exists()) {
+            set(userRef, { ...snapshot.val(), status: 'online' });
+          }
+        });
+        onDisconnect(ref(database, 'users/' + uid + '/status')).set('offline');
+      }
+    });
+  </script>
+</body>
+</html>

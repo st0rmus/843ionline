@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analog Suallar</title>
+  <link rel="stylesheet" href="imtahan.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <style>
+    .checkbox-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      margin: 6px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+      font-size: 15px;
+      user-select: none;
+    }
+    .checkbox-item:hover:not(.revealed) {
+      background: rgba(100,149,237,0.12);
+    }
+    .checkbox-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #6495ED;
+      cursor: pointer;
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+    .checkbox-item.correct {
+      background: rgba(0,200,100,0.18);
+      border-color: #00c864;
+      color: green;
+      font-weight: bold;
+    }
+    .checkbox-item.wrong {
+      background: rgba(255,60,60,0.14);
+      border-color: #ff3c3c;
+      color: red;
+    }
+    .checkbox-item.missed {
+      background: rgba(255,165,0,0.18);
+      border-color: orange;
+      color: darkorange;
+      font-weight: bold;
+    }
+    .submit-btn {
+      display: block;
+      margin: 20px auto 0;
+      padding: 13px 48px;
+      background: linear-gradient(135deg, #6495ED, #4a7bd4);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(100,149,237,0.4);
+      transition: all 0.2s;
+    }
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(100,149,237,0.5);
+    }
+    .submit-btn:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(100,149,237,0.3);
+    }
+    .submit-btn:disabled {
+      cursor: default;
+      opacity: 0.92;
+    }
+    .question-number {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+    .score-display {
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+      margin: 14px 0 4px;
+    }
+    .score-sub {
+      text-align: center;
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 18px;
+    }
+    .restart-btn {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 28px;
+      background: #5a5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .restart-btn:hover { background: #4a4; }
+    body.dark-mode .checkbox-item { color: #ddd; }
+    body.dark-mode .checkbox-item.correct { color: #6f6; }
+    body.dark-mode .checkbox-item.wrong { color: #f88; }
+    body.dark-mode .score-sub { color: #aaa; }
+    body.dark-mode .question-number { color: #aaa; }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="form-container"></div>
+    <div class="current-question" id="currentQuestionDisplay">Sual: 1</div>
+    <div class="dropdown">
+      <button class="dropbtn" onclick="toggleDropdown()">
+        <i class="fa fa-user"></i> İstifadəçi
+      </button>
+      <div class="dropdown-content" id="dropdownContent">
+        <a href="imtahan.html"><i class="fa fa-pen"></i> İmtahan</a>
+        <a href="login.html"><i class="fa fa-home"></i> Əsas səhifə</a>
+        <a href="qapalı.html"><i class="fa fa-lock"></i> Analoq qapalı suallar</a>
+        <a href="#" class="dark-mode-toggle" onclick="toggleDarkMode()"><i class="fa fa-moon"></i> Qaranlıq rejim</a>
+        <a href="#" onclick="showInfo()"><i class="fa fa-comment"></i> Təklif və iradlar</a>
+        <a href="#" onclick="logout()"><i class="fa fa-sign-out-alt"></i> Çıxış</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="questionContainer"></div>
+  <div class="navigation">
+    <button class="btn" id="prevBtn" onclick="showQuestion(currentIdx - 1)" disabled>Əvvəlki</button>
+    <button class="btn" id="nextBtn" onclick="showQuestion(currentIdx + 1)">Sonrakı</button>
+  </div>
+
+  <script>
+    const analogJson = {
+      questions: [
+        "Which of the following activities is appropriate for the project?",
+        "What are the characteristics of the project?",
+        "For what reasons can a project be created?",
+        "Which of the following is not a basis for creating projects?",
+        "Which of these characterizes the purpose of project management?",
+        "Which of the following are project constraints?",
+        "Which of these is a management method?",
+        "What do companies gain as a result of effective project management?",
+        "Which of these are project management stages?",
+        "What is done at the initial stage?",
+        "For what reasons can the project be started?",
+        "Which of the mentioned skills are needed?",
+        "Which of these represents scope?",
+        "Which of these are techniques for gathering requirements?",
+        "Which of the following characterizes the SMART technique?",
+        "What are the objectives of the project's change control process?",
+        "What should the project manager be sure of during quality management?",
+        "Which of these are the stages of cost management?",
+        "Which of the following are indicators of the initial stage in project management?",
+        "Which of the following are indicators of the verification phase in project management?",
+        "What can we control through earned value analysis?",
+        "Which information about traditional management method is true?",
+        "Which information about Agile management method is true?",
+        "Choose the values of Agile from the list below.",
+        "Which of the following describes the role of the project manager?",
+        "Which of the following is the purpose of the first project meeting?",
+        "What project management tools are used to solve problems?",
+        "Which of the following is not a limitation in project management?",
+        "Which of the following characterizes Scrum?",
+        "Which statements about the Scrum team are true?",
+        "Which of these are the foundations of Scrum?",
+        "What are the values of Scrum?",
+        "Which of the following is the composition of a scrum team?",
+        "Developers are responsible for which of the following?",
+        "What are the tasks that the Product Owner is responsible for?",
+        "What are the tasks that a scrum master is responsible for?",
+        "Which of the following describes the role of a Scrum master?",
+        "What does a scrum master achieve by doing it right?",
+        "Which of the following characterizes a sprint?",
+        "Which information about the Sprint backlog is true?",
+        "Which of the following apply to daily scrum?",
+        "Which of these are considered Scrum artifacts?",
+        "What describes the product owner?",
+        "Which of these are positive project risks?",
+        "Which of the following characterizes risk?",
+        "Which of the following could be interested parties?",
+        "What are the responsibilities of the project manager during the implementation phase?",
+        "What works are carried out in the implementation phase?",
+        "Which of these apply to status reports?",
+        "For what purpose is the closing certificate issued?"
+      ],
+      options: [
+        ["daily work", "new service", "limitation", "repetition", "satisfaction"],
+        ["Having a start and end date", "No time limit", "Non-unique activity", "Creation of a new product", "Repeat product or service creation"],
+        ["to avoid making changes", "to remove restrictions", "compatibility indicators", "due to law or social requirements", "at the request of the product owner"],
+        ["To eliminate external influences", "Change business or technological strategies", "Iterative business or technological strategies", "To develop products and services", "At the request of interested parties"],
+        ["gathering a highly qualified team", "timely completion of the project", "quality finish", "cooperation with interested parties", "increasing the company's income"],
+        ["budget", "interested party", "risks", "time", "scope"],
+        ["Corporate", "Traditional", "Hybrid", "Creative", "Agile"],
+        ["achieves business goals", "Delivers the right products at the right time", "Changes are not executed", "It alienates interested parties", "Produces an effective product"],
+        ["change", "planning", "implementation", "closure", "agreement"],
+        ["the charter is prepared", "the project is planned", "increment is prepared", "the sprint is set up", "meeting with interested parties"],
+        ["according to the customer's opinion", "due to internal business needs", "due to renewal of services", "at the request of interested parties", "due to external influences"],
+        ["high skill", "expert opinion", "data collection", "budget management", "preparation of documents"],
+        ["changes", "stakeholders", "execution of operations", "things to do", "functionality"],
+        ["program", "moderator", "interview", "observation", "comparison"],
+        ["timely", "specific", "strategic", "systematic", "reliable"],
+        ["documentation of changes", "prevention of changes", "planning changes", "evaluation of changes", "approval of changes"],
+        ["From the use of resources", "From detailed receipt of users' requirements", "From fully documenting requirements", "From the work of the network administrator", "Since the software is ready"],
+        ["provision of project costs", "project cost planning", "project cost estimation", "calculation of project costs", "implementation of project costs"],
+        ["the purpose of the project", "project monitoring", "tasks of the project", "project requirements", "project plan"],
+        ["finalization of the project", "prohibition of change", "making necessary corrections", "performance of tasks", "project progress control"],
+        ["to employees", "to the requirements of users", "to the budget", "to time", "to software"],
+        ["Originated in America", "It was created in 1995", "Originated in Japan", "It was created in the 21st century", "It was created in 1950"],
+        ["Originated in America", "It was created in 1995", "Originated in Japan", "It was created in the 21st century", "It was created in 1950"],
+        ["The purpose of the project", "Individuals and communication", "A working program", "Minimum applied product", "Responding to change"],
+        ["technical expert", "financial analyst", "project planning", "project implementation", "quality assurance specialist"],
+        ["set expectations", "prepare the charter", "clarify the budget", "introduce stakeholders", "prioritizing risks"],
+        ["Pareto chart", "Ishikawa diagram", "Why Technique", "Gantt chart", "Network diagram"],
+        ["Budget", "Composition of the team", "Time", "Scope", "Availability of a similar product"],
+        ["leading to extravagance", "unplanned operation", "based on empiricism", "preference for personal opinions", "having a lean mindset"],
+        ["consists of the board of directors", "3 positions available", "no interested party", "developers are the majority", "manages the budget"],
+        ["organization", "adaptation", "verification", "mediation", "transparency"],
+        ["privacy", "openness", "opportunity", "commitment", "open hand"],
+        ["developers", "collaborators", "product owner", "scrum master", "organizer"],
+        ["Collect the team", "Create sprint backlog", "Adaptation towards the Sprint goal", "Calculate costs", "Division of work"],
+        ["Preparation of the project charter", "Formation of the product target", "Creation of Product Backlog", "Prevention of change", "Software availability"],
+        ["Preparation of documents", "Conducting the experiment", "Backlog preparation", "Setting up Scrum", "Effectiveness of the Scrum Team"],
+        ["designer", "intermediary", "teacher", "programmer", "operator"],
+        ["to the creation of low value Increments", "demotivation of team members", "to the formation of Increment with high quality", "the delay of scrum events", "self-management of the scrum team"],
+        ["Sprint acts as a container for scrum events", "Sprint scrum inhibits communication between the team", "Sprint alienates stakeholders", "Sprint is created by the management team", "Sprint is the force that turns scrum ideas into value"],
+        ["the operator controls", "manages costs", "created by developers", "the target is increment", "working without a plan"],
+        ["a mandatory meeting of the whole team", "15 minute meeting", "informing the board", "meeting of developers", "presentation of increments"],
+        ["sprint planning", "product backlog", "sprint backlog", "daily scrum", "increment"],
+        ["which creates the sprint backlog", "managing the product backlog", "facilitator", "creating the product backlog", "psychologist"],
+        ["completion of the project ahead of schedule", "vacation of the project implementation team", "many changes", "not exceeding the calculated budget", "spending more than the calculated budget"],
+        ["is controlled", "uncontrollable", "prevented", "is uncertain", "is unexpected"],
+        ["courier", "state bodies", "developers", "operator", "project manager"],
+        ["budget assessment", "preparing the sprint", "allocation of resources", "drawing up an implementation plan", "budget calculation"],
+        ["project implementation", "planning", "writing a charter", "solving problems", "collection of requirements"],
+        ["checking the change proposal", "problem and generated errors", "adaptation of the implementation process", "implementation process planning", "time and budget information"],
+        ["exempting the project manager from responsibilities", "a negative indicator of team work", "submission of change", "completion of the implementation process", "creation of sprint"]
+      ],
+      correct: [
+        [1,2,4], [0,3], [2,3], [0,2,4], [1,2],
+        [0,3,4], [1,2,4], [0,1], [1,2,3], [0,4],
+        [1,4], [1,2], [3,4], [2,3,4], [0,1],
+        [0,3,4], [1,2], [1,2,3], [0,3], [2,4],
+        [2,3], [2,4], [0,1], [1,2,4], [2,3],
+        [0,1], [1,2], [1,4], [2,4], [1,3],
+        [1,2,4], [1,3], [0,2,3], [1,2], [1,2],
+        [3,4], [1,2], [2,4], [0,4], [2,3],
+        [1,3], [1,2,4], [1,3], [0,3], [0,2],
+        [1,2,4], [2,3], [0,3], [1,4], [0,3]
+      ]
+    };
+
+    const TOTAL_QUESTIONS = analogJson.questions.length;
+    let currentIdx = 0;
+    let score = 0;
+    let wrongIndexes = [];
+    let userSelections = {};
+
+    function init() {
+      currentIdx = 0;
+      score = 0;
+      wrongIndexes = [];
+      userSelections = {};
+      showQuestion(currentIdx);
+    }
+
+    function submitAnswer(qIdx, ul, submitBtn) {
+      const correctSet = new Set(analogJson.correct[qIdx]);
+      const items = ul.querySelectorAll('.checkbox-item');
+      const selected = [];
+
+      items.forEach((li, i) => {
+        const cb = li.querySelector('input');
+        if (cb.checked) selected.push(i);
+        cb.disabled = true;
+        li.style.cursor = 'default';
+      });
+
+      userSelections[qIdx] = selected;
+      const selectedSet = new Set(selected);
+
+      items.forEach((li, i) => {
+        if (correctSet.has(i) && selectedSet.has(i)) {
+          li.classList.add('correct');
+        } else if (!correctSet.has(i) && selectedSet.has(i)) {
+          li.classList.add('wrong');
+        } else if (correctSet.has(i) && !selectedSet.has(i)) {
+          li.classList.add('missed');
+        }
+      });
+
+      const isCorrect =
+        correctSet.size === selectedSet.size &&
+        [...correctSet].every(v => selectedSet.has(v));
+
+      if (isCorrect) {
+        if (!wrongIndexes.includes(qIdx)) score++;
+      } else {
+        if (!wrongIndexes.includes(qIdx)) wrongIndexes.push(qIdx);
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = isCorrect ? '✓ Düzgün' : '✗ Yanlış';
+      submitBtn.style.background = isCorrect ? '#3a3' : '#c33';
+
+      updateNavButtons();
+    }
+
+    function createQuestionCard(qIdx) {
+      const card = document.createElement('div');
+      card.classList.add('question-card');
+
+      const numDiv = document.createElement('div');
+      numDiv.classList.add('question-number');
+      numDiv.textContent = `Sual ${currentIdx + 1} / ${TOTAL_QUESTIONS}  (№${qIdx + 251})`;
+      card.appendChild(numDiv);
+
+      const qDiv = document.createElement('div');
+      qDiv.classList.add('question');
+      qDiv.textContent = analogJson.questions[qIdx];
+      card.appendChild(qDiv);
+
+      const opts = analogJson.options[qIdx];
+      const correctSet = new Set(analogJson.correct[qIdx]);
+      const prevSel = userSelections[qIdx];
+
+      const ul = document.createElement('ul');
+      ul.classList.add('checkbox-list');
+
+      opts.forEach((opt, i) => {
+        const li = document.createElement('li');
+        li.classList.add('checkbox-item');
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.id = `opt_${qIdx}_${i}`;
+
+        if (prevSel !== undefined) {
+          const selectedSet = new Set(prevSel);
+          cb.disabled = true;
+          cb.checked = selectedSet.has(i);
+          if (correctSet.has(i) && selectedSet.has(i)) li.classList.add('correct');
+          else if (!correctSet.has(i) && selectedSet.has(i)) li.classList.add('wrong');
+          else if (correctSet.has(i) && !selectedSet.has(i)) li.classList.add('missed');
+          li.style.cursor = 'default';
+        } else {
+          li.onclick = (e) => { if (e.target !== cb) cb.checked = !cb.checked; };
+        }
+
+        const label = document.createElement('label');
+        label.htmlFor = cb.id;
+        label.textContent = `${i + 1}) ${opt}`;
+        label.style.cursor = prevSel !== undefined ? 'default' : 'pointer';
+
+        li.appendChild(cb);
+        li.appendChild(label);
+        ul.appendChild(li);
+      });
+
+      card.appendChild(ul);
+
+      if (prevSel === undefined) {
+        const submitBtn = document.createElement('button');
+        submitBtn.classList.add('submit-btn');
+        submitBtn.textContent = 'Təsdiq et';
+        submitBtn.onclick = () => submitAnswer(qIdx, ul, submitBtn);
+        card.appendChild(submitBtn);
+      } else {
+        const alreadyCorrect = new Set(prevSel).size === correctSet.size &&
+          [...correctSet].every(v => new Set(prevSel).has(v));
+        const doneBtn = document.createElement('button');
+        doneBtn.classList.add('submit-btn');
+        doneBtn.disabled = true;
+        doneBtn.textContent = alreadyCorrect ? '✓ Düzgün' : '✗ Yanlış';
+        doneBtn.style.background = alreadyCorrect ? '#3a3' : '#c33';
+        card.appendChild(doneBtn);
+      }
+
+      return card;
+    }
+
+    function showQuestion(idx) {
+      currentIdx = idx;
+      const container = document.getElementById('questionContainer');
+      container.innerHTML = '';
+      container.appendChild(createQuestionCard(idx));
+      document.getElementById('currentQuestionDisplay').textContent =
+        `Sual: ${currentIdx + 1} / ${TOTAL_QUESTIONS}`;
+      updateNavButtons();
+    }
+
+    function updateNavButtons() {
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      if (prevBtn) prevBtn.disabled = currentIdx === 0;
+      if (nextBtn) nextBtn.disabled = currentIdx === TOTAL_QUESTIONS - 1;
+    }
+
+    function showWrongAnswers() {
+      // not used in this mode
+    }
+
+    function toggleDropdown() {
+      document.getElementById("dropdownContent").classList.toggle("show");
+    }
+    function logout() { window.location.href = "index.html"; }
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      document.body.style.color = document.body.classList.contains("dark-mode") ? "white" : "black";
+    }
+    function showInfo() { alert("Bura arzular və istəklər verilişi deyil."); }
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+      }
+    };
+
+    init();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, ref, set, onDisconnect, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCISiSeOegesyAaqVsHuRNH7cFtGUUc920",
+      authDomain: "iproject-edf06.firebaseapp.com",
+      projectId: "iproject-edf06",
+      storageBucket: "iproject-edf06.appspot.com",
+      messagingSenderId: "1094280671740",
+      appId: "1:1094280671740:web:4acb1a445f3ffe37bf4279"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const database = getDatabase(app);
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.replace("index.html");
+      } else {
+        const uid = user.uid;
+        get(ref(database, 'users/' + uid + '/rank')).then(snapshot => {
+          if (snapshot.val() === 'guest') window.location.href = 'guest.html';
+        });
+      }
+    });
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        const uid = user.uid;
+        const userRef = ref(database, 'users/' + uid);
+        get(userRef).then(snapshot => {
+          if (snapshot.exists()) set(userRef, { ...snapshot.val(), status: 'online' });
+        });
+        onDisconnect(ref(database, 'users/' + uid + '/status')).set('offline');
+      }
+    });
+  </script>
+</body>
+</html>
